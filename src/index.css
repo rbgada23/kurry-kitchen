@@ -7,3 +7,7 @@
 .background{
   background-color: red;
 }
+
+.button-override{
+  border:2px;
+}
