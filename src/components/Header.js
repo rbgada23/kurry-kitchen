@@ -60,7 +60,7 @@ const Header = () => {
             onClick={() => {
               handleUserSetupSelection(SELLER);
             }}
-            className="button-override text-xl bg-red-100 rounded px-5 py-2 border-red-700 text-red-900"
+            className="button-override text-xl bg-red-100 rounded-lg px-5 py-2 border-red-700 text-red-900"
           >
             SETUP KITCHEN
           </button>}
@@ -68,7 +68,7 @@ const Header = () => {
             onClick={() => {
               handleUserSetupSelection(CUSTOMER);
             }}
-            className="button-override text-xl ml-5 bg-red-100 rounded px-5 py-2 border-red-700 text-red-900"
+            className="button-override text-xl ml-5 bg-red-100 rounded-lg px-5 py-2 border-red-700 text-red-900"
           >
             ORDER
           </button>}
