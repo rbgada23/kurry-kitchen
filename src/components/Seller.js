@@ -1,15 +1,16 @@
 import React from 'react'
 import Header from "./Header";
+import AddMenu from './Seller/addMenu';
 
 
 const Seller = () => {
   return (
-    <div>
-    <Header />
-    <div className="mx-auto text-center absolute mt-28">
-        Welcome To Seller Page !!!
+    <div className='bg-[antiquewhite]'>
+      <Header />
+      <div className="mx-auto text-center">
+        <AddMenu />
+      </div>
     </div>
-  </div>
   )
 }
 

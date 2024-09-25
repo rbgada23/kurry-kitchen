@@ -11,7 +11,7 @@ import {
   import { checkValidData } from "../utils/validate";
   import { useDispatch } from "react-redux";
   import { addUser } from "../utils/userSlice";
-  import BG_URL from "../assets/kitchen4.avif"
+  import BG_URL from "../assets/kitchenBG.jpg"
 
 
 const Login = () => {
@@ -94,14 +94,14 @@ const Login = () => {
       <Header />
       <div className="absolute ">
         <img
-          className="h-screen object-cover w-screen"
+          className="h-screen object-cover w-screen opacity-80"
           src={BG_URL}
           alt="logo"
         />
       </div>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="w-full md:w-3/12 absolute p-12 bg-red-100 my-36 mx-auto right-0 left-0 text-red-700 rounded-lg"
+        className="w-full md:w-3/12 absolute p-12 bg-custom-green my-36 mx-auto right-0 left-0 text-white rounded-lg"
       >
         <h1 className="font-bold text-3xl py-4">
           {isSignInForm ? "Sign In" : "Sign Up"} {isSellerForm === SELLER ? "- Kitchen" : "- Customer"}
@@ -112,32 +112,32 @@ const Login = () => {
             ref={name}
             type="text"
             placeholder="Full Name"
-            className="p-4 my-4 w-full bg-white border rounded-lg hover:border-green-200"
+            className="p-4 my-4 w-full bg-white border text-green-700 text-black rounded-lg hover:border-green-200"
             />
         )}
         <input
           ref={email}
           type="text"
           placeholder="Email Address"
-          className="p-4 my-4 w-full bg-white border rounded-lg hover:border-green-200"
+          className="p-4 my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
         />
         <input
           ref={password}
           type="password"
           placeholder="Password"
-          className="p-4 my-4 w-full bg-white border rounded-lg hover:border-green-200"
+          className="p-4 my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
         />
         {!isSignInForm && (
           <input
             ref={zipCode}
             type="text"
             placeholder="Enter your zip code"
-            className="p-4 my-4 w-full bg-white border rounded-lg hover:border-green-200"
+            className="p-4 my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
             />
         )}
         <p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>
         <button
-          className="p-4 my-6 bg-red-200 w-full rounded-lg border font-bold"
+          className="p-4 my-6 bg-[antiquewhite] text-custom-green w-full rounded-lg border font-bold"
           onClick={handleButtonClick}
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
