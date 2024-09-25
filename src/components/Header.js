@@ -49,7 +49,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="absolute w-screen px-8 py-4 z-10 flex flex-row items-center justify-between">
+    <div className="absolute w-full px-8 py-4 z-10 flex flex-row items-center justify-between">
       {/* Invisible spacer to push buttons to the right */}
       <div className="flex-grow" />
 
