@@ -12,10 +12,10 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
-  const isSellerForm = useSelector(store=>store.form.isSellerForm);
+  const isSellerForm = useSelector(store => store.form.isSellerForm);
   const handleSignOut = () => {
     signOut(auth)
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         navigate("/error");
       });
@@ -49,35 +49,50 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="absolute w-screen px-8 py-4 bg-gradient-to-b from-green-500 z-10 flex flex-col md:flex-row justify-between">
-      {/* ToDo : Replace with logo */}
-      <div className="font-serif text-3xl text-red-500 font-bold">
+    <div className="absolute w-screen px-8 py-4 z-10 flex flex-row items-center justify-between">
+      {/* Invisible spacer to push buttons to the right */}
+      <div className="flex-grow" />
+
+      {/* Centered Logo */}
+      <div className="font-serif text-3xl text-custom-green font-bold absolute left-1/2 transform -translate-x-1/2">
         K u r r y &nbsp; K i t c h e n
       </div>
+
+      {/* Buttons section, aligned to the right */}
       {true && (
-        <div className="flex p-2 justify-between -mt-4 md:mt-0">
-          {!user &&  <button
-            onClick={() => {
-              handleUserSetupSelection(SELLER);
-            }}
-            className="button-override text-xl bg-red-100 rounded-lg px-5 py-2 border-red-700 text-red-900"
-          >
-            SETUP KITCHEN
-          </button>}
-          {!user && <button
-            onClick={() => {
-              handleUserSetupSelection(CUSTOMER);
-            }}
-            className="button-override text-xl ml-5 bg-red-100 rounded-lg px-5 py-2 border-red-700 text-red-900"
-          >
-            ORDER
-          </button>}
-          {user && <button onClick={handleSignOut} className="ml-4 font-bold text-red-900 cursor-pointer">
-            Sign Out
-          </button>}
+        <div className="flex items-center p-2 justify-end">
+          {!user && (
+            <button
+              onClick={() => {
+                handleUserSetupSelection(SELLER);
+              }}
+              className="button-override text-xl bg-[antiquewhite] text-custom-green rounded-lg px-5 py-2 "
+            >
+              SETUP KITCHEN
+            </button>
+          )}
+          {!user && (
+            <button
+              onClick={() => {
+                handleUserSetupSelection(CUSTOMER);
+              }}
+              className="button-override text-xl ml-5 bg-[antiquewhite] text-custom-green rounded-lg px-5 py-2 "
+            >
+              ORDER
+            </button>
+          )} 
+          {user && (
+            <button
+              onClick={handleSignOut}
+              className="p-3 my-6 bg-custom-green text-white w-full rounded-lg border font-bold hover:bg-emerald-600"
+            >
+              Sign Out
+            </button>
+          )}
         </div>
       )}
     </div>
+
   );
 };
 
