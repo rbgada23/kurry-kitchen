@@ -3,15 +3,15 @@ import Header from "./Header";
 import { useSelector } from "react-redux";
 import { CUSTOMER, SELLER } from "../utils/constants";
 import {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    updateProfile,
-  } from "firebase/auth";
-  import { auth } from "../utils/firebase";
-  import { checkValidData } from "../utils/validate";
-  import { useDispatch } from "react-redux";
-  import { addUser } from "../utils/userSlice";
-  import BG_URL from "../assets/kitchenBG.jpg"
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { checkValidData } from "../utils/validate";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import BG_URL from "../assets/kitchenBG.jpg"
 
 
 const Login = () => {
@@ -37,8 +37,8 @@ const Login = () => {
           const user = userCredential.user;
           updateProfile(user, {
             displayName: name.current.value,
-            userType : isSellerForm ? SELLER : CUSTOMER,
-            zipcode : zipCode.current.value
+            userType: isSellerForm ? SELLER : CUSTOMER,
+            zipcode: zipCode.current.value
           })
             .then(() => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
@@ -47,8 +47,8 @@ const Login = () => {
                   uid: uid,
                   email: email,
                   displayName: displayName,
-                  userType : isSellerForm ? SELLER : CUSTOMER,
-                  zipcode : zipCode.current.value
+                  userType: isSellerForm ? SELLER : CUSTOMER,
+                  zipcode: zipCode.current.value
                 })
               );
             })
@@ -113,7 +113,7 @@ const Login = () => {
             type="text"
             placeholder="Full Name"
             className="p-4 my-4 w-full bg-white border text-green-700 text-black rounded-lg hover:border-green-200"
-            />
+          />
         )}
         <input
           ref={email}
@@ -133,7 +133,7 @@ const Login = () => {
             type="text"
             placeholder="Enter your zip code"
             className="p-4 my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
-            />
+          />
         )}
         <p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>
         <button
@@ -142,7 +142,7 @@ const Login = () => {
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
-        
+
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
           {isSignInForm
             ? "New to Kurry Kitchen? Sign Up Now"

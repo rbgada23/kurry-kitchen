@@ -25,7 +25,6 @@ const AddMenuModal = ({ menuType, onClose }) => {
                 <h2 className="text-xl font-semibold mb-4">Add New {menuType} Item</h2>
 
                 <form className="flex flex-col justify-between h-full">
-                    {/* Form content */}
                     <div>
                         <label className="block mb-2 text-sm font-medium text-gray-700">
                             Image:
@@ -41,7 +40,7 @@ const AddMenuModal = ({ menuType, onClose }) => {
                             <textarea
                                 placeholder="Enter description"
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                                required
+
                             />
                         </label>
 
@@ -51,7 +50,6 @@ const AddMenuModal = ({ menuType, onClose }) => {
                                 type="number"
                                 placeholder="Enter rate"
                                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                                required
                             />
                         </label>
 

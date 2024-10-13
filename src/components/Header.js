@@ -37,7 +37,7 @@ const Header = () => {
             zipcode: zipCode,
           })
         );
-        isSellerForm == SELLER ? navigate("/seller") : navigate("/customer")
+        isSellerForm == SELLER ? navigate("/seller") : navigate("/seller")
       } else {
         dispatch(removeUser());
         navigate("/");
@@ -80,11 +80,11 @@ const Header = () => {
             >
               ORDER
             </button>
-          )} 
+          )}
           {user && (
             <button
               onClick={handleSignOut}
-              className="p-3 my-6 bg-custom-green text-white w-full rounded-lg border font-bold hover:bg-emerald-600"
+              className="px-4 py-2 bg-custom-green text-white rounded hover:bg-emerald-600"
             >
               Sign Out
             </button>
