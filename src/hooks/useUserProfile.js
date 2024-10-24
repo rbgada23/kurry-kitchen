@@ -19,11 +19,12 @@ const useUserProfile = () => {
         },
       });
 
-      if (userProfile) {
+      if (userProfile && userProfile.data) {
         const userInfo = {
           email: userProfile.data.data.emailId,
           displayName: userProfile.data.data.firstName,
           userType: userProfile.data.data.userType,
+          userId: userProfile.data.data._id,
         };
         dispatch(addUser(userInfo));
         userProfile?.data.data.userType == SELLER
@@ -41,7 +42,7 @@ const useUserProfile = () => {
   if (parts.length === 2) {
     const user = localStorage.getItem("user");
     if(!userStore)
-    getUserProfile(JSON.parse(user).email);
+    getUserProfile(JSON.parse(user)?.email);
   }
 };
 
