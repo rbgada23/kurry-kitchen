@@ -25,8 +25,8 @@ const Toaster = ({ variant, children }) => {
     // <div className={`alert alert-${variant} w-fit`}>
     //   {children}
     // </div>
-   <div class="toast toast-top toast-end z-10">
-   <div class="alert alert-success">
+   <div className="toast toast-top toast-end z-10">
+   <div className="alert alert-success">
      <span>Logged in succesfully</span>
    </div>
  </div>

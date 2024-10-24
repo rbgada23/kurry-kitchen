@@ -1,21 +1,14 @@
-import { useState, useRef, Children } from "react";
+import { useState, useRef } from "react";
 import Header from "./Header";
 import { useSelector } from "react-redux";
-import { CUSTOMER, SELLER } from "../utils/constants";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
-import { auth } from "../utils/firebase";
+import {  SELLER } from "../utils/constants";
+
 import { checkValidData } from "../utils/validate";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import BG_URL from "../assets/kitchenBG.jpg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Toaster from "./Toaster/Toaster";
-import { getKitchenMenu } from "../service/kitchen";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -48,6 +41,7 @@ const Login = () => {
           email: response.data.emailId,
           displayName: response.data.firstName,
           userType: response.data.userType,
+          userId : response.data._id
         };
         setUser(userInfo);
         localStorage.setItem('user', JSON.stringify(userInfo)); 
@@ -69,6 +63,7 @@ const Login = () => {
           email: response.data.emailId,
           displayName: response.data.firstName,
           userType: response.data.userType,
+          userId : response.data._id
         }
         setUser(userInfo);
         localStorage.setItem('user', JSON.stringify(userInfo));

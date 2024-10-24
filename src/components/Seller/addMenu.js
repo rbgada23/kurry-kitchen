@@ -61,7 +61,7 @@ const AddMenu = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center" style={{ backgroundColor: 'antiqueWhite' }}>
+    <div className="h-screen flex flex-col justify-center items-center">
       <h1 className="text-3xl font-bold text-center mb-8">Menu Management</h1>
 
       <div className="flex justify-center space-x-8">
