@@ -12,7 +12,7 @@ const Body = () => {
       element: <Login />,
     },
     {
-      path: "/seller",
+      path: "/kitchen",
       element: <Seller />,
     },
     {
@@ -24,7 +24,7 @@ const Body = () => {
 
   return (
     <div>
-      <RouterProvider router={appRouter}></RouterProvider>
+      <RouterProvider router={appRouter} ></RouterProvider>
     </div>
   );
 };

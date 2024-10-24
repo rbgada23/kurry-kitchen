@@ -5,7 +5,7 @@ import FilterKitchen from "./FilterKitchen";
 const KitchenList = ({ title, kitchenList }) => {
   return (
     <div className="">
-      <h1 className="text-lg md:text-4xl py-4 mb-6 text-black font-bold ">{title}</h1>
+      <h1 className="text-lg md:text-4xl py-4 mb-6 text-white font-bold ">{title}</h1>
       <FilterKitchen/>
       <div className="flex ">
         <div className="flex">

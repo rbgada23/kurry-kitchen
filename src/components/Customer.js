@@ -11,7 +11,7 @@ const Customer = () => {
   return (
     <div>
       <Header />
-      <div className="absolute mt-32 ">
+      <div  className="absolute mt-32" >
         <div className=" mt-0 pl-4 md:pl-20">
           {/* <p className="font-bold text-xl">Welcome {user.email}</p> */}
           <KitchenList title={"Trending Kitchen"} kitchenList={kitchenList} />
