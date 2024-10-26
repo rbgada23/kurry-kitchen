@@ -14,10 +14,6 @@ const useKitchen = () => {
         userId: JSON.parse(localStorage.getItem("user"))?.userId,
       },
     });
-    if (response.data.data == null)
-      setTimeout(() => {
-        document.getElementById("my_modal_1").showModal();
-      }, 500);
     console.log(response.data);
     dispatch(addKitchen(response.data.data));
   };

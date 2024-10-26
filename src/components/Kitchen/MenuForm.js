@@ -4,7 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addKitchenMenu } from "../../utils/kitchenSlice";
 
-const MenuForm = () => {
+const MenuForm = ({ isModalOpen, closeModal }) => {
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [price, setPrice] = useState("");
@@ -15,6 +15,7 @@ const MenuForm = () => {
   const kitchen = useSelector((store) => store.kitchen.kitchenObj);
 
   const handleSubmit = (e) => {
+    closeModal();
     e.preventDefault();
     // Handle form submission (e.g., send data to an API)
     postMenu();
@@ -37,7 +38,7 @@ const MenuForm = () => {
         }
       );
       if (response) {
-        dispatch(addKitchenMenu(response.data.data));
+        dispatch(addKitchenMenu([response.data.data]));
       }
     } catch (error) {
       console.error("API call failed:", error);
@@ -47,7 +48,7 @@ const MenuForm = () => {
   return (
     <div>
       {" "}
-      <dialog id="menu_form_modal" className="modal ">
+      <dialog id="menu_form_modal" className={`modal ${isModalOpen ? 'modal-open' : 'hidden'}`}>
         <div className="modal-box bg-white">
           <form className="flex flex-col justify-between h-full">
             <div>
@@ -71,8 +72,9 @@ const MenuForm = () => {
                 <select
                   className="select select-bordered bg-slate-50"
                   onChange={(e) => setType(e.target.value)}
+                  defaultValue={"Vegeterain"}
                 >
-                  <option disabled selected>
+                  <option disabled>
                     Pick one
                   </option>
                   <option>Vegeterian</option>

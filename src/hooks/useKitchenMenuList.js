@@ -20,7 +20,7 @@ const useKitchenMenuList = () => {
   };
 
   useEffect(() => {
-    if (!kitchenMenuList) getKitchenMenuList();
+    if (!kitchenMenuList.length > 0) getKitchenMenuList();
   }, []);
 };
 
