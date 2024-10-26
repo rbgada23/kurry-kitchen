@@ -13,7 +13,7 @@ const Header = () => {
   useUserProfile();
 
   const handleSignOut = () => {
-    localStorage.removeItem("user");
+    localStorage.clear();
     document.cookie =
       "token" + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     navigate("/");
@@ -26,15 +26,11 @@ const Header = () => {
 
   return (
     <div className="absolute w-full px-8 py-4 z-10 flex flex-row items-center justify-between">
-      {/* Invisible spacer to push buttons to the right */}
       <div className="flex-grow" />
 
-      {/* Centered Logo */}
       <div className="font-serif text-3xl text-custom-green font-bold absolute left-1/2 transform -translate-x-1/2">
         K u r r y &nbsp; K i t c h e n
       </div>
-
-      {/* Buttons section, aligned to the right */}
       {true && (
         <div className="flex items-center p-2 justify-end">
           {!user && (

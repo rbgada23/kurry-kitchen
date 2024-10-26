@@ -102,6 +102,7 @@ const KitchenLayout = () => {
             <div className="flex w-full">
               {kitchenMenuList?.map((x) => (
                 <MenuCard
+                  isFromCustomerPage={false}
                   key={x._id}
                   name={x.name}
                   items={x.items}

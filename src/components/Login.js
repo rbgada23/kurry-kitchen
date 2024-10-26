@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Header from "./Header";
 import { useSelector } from "react-redux";
-import {  SELLER } from "../utils/constants";
+import { SELLER } from "../utils/constants";
 
 import { checkValidData } from "../utils/validate";
 import { useDispatch } from "react-redux";
@@ -9,6 +9,7 @@ import { addUser } from "../utils/userSlice";
 import BG_URL from "../assets/kitchenBG.jpg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -18,6 +19,7 @@ const Login = () => {
   const isSellerForm = useSelector((store) => store.form.isSellerForm);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleButtonClick = async () => {
     const message = checkValidData(email.current.value, password.current.value);
     setErrorMessage(message);
@@ -30,48 +32,59 @@ const Login = () => {
         password: password.current.value,
         userType: isSellerForm,
       };
-      const response = await axios.post(
-        "http://localhost:3001/signup",
-        userObj
-      );
-
-      console.log(response);
-      if (response) {
-        const userInfo = {
-          email: response.data.emailId,
-          displayName: response.data.firstName,
-          userType: response.data.userType,
-          userId : response.data._id
-        };
-        setUser(userInfo);
-        localStorage.setItem('user', JSON.stringify(userInfo)); 
-        dispatch(
-          addUser(userInfo)
+      try {
+        const response = await axios.post(
+          "http://localhost:3001/signup",
+          userObj
         );
-        navigate(response.data.userType == SELLER ? "/kitchen" : "/customer");
+
+        console.log(response);
+        if (response && response.status === 200 && response.data) {
+          const userInfo = {
+            email: response.data.data.emailId,
+            displayName: response.data.data.firstName,
+            userType: response.data.data.userType,
+            userId: response.data.data._id
+          };
+          setUser(userInfo);
+          localStorage.setItem('user', JSON.stringify(userInfo));
+          dispatch(
+            addUser(userInfo)
+          );
+          navigate(response.data.data.userType == SELLER ? "/kitchen" : "/customer");
+        }
+      } catch (error) {
+        toast.error(error?.response?.data)
       }
+
     } else {
       const userObj = {
         emailId: email.current.value,
         password: password.current.value,
       };
-      const response = await axios.post('http://localhost:3001/login', userObj, {
-        withCredentials: true, // Ensure cookies are included in the request
-      });
-      if (response) {
-        const userInfo = {
-          email: response.data.emailId,
-          displayName: response.data.firstName,
-          userType: response.data.userType,
-          userId : response.data._id
+      try {
+        const response = await axios.post('http://localhost:3001/login', userObj, {
+          withCredentials: true,
+        });
+        if (response) {
+          const userInfo = {
+            email: response.data.emailId,
+            displayName: response.data.firstName,
+            userType: response.data.userType,
+            userId: response.data._id
+          }
+          setUser(userInfo);
+          localStorage.setItem('user', JSON.stringify(userInfo));
+          dispatch(
+            addUser(userInfo)
+          );
+          navigate(response.data.userType == SELLER ? "/kitchen" : "/customer");
         }
-        setUser(userInfo);
-        localStorage.setItem('user', JSON.stringify(userInfo));
-        dispatch(
-          addUser(userInfo)
-        );        
-        navigate(response.data.userType == SELLER ? "/kitchen" : "/customer");
+
+      } catch (error) {
+        toast.error(error?.response?.data)
       }
+
     }
   };
 
