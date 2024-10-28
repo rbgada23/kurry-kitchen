@@ -14,7 +14,6 @@ const useKitchen = () => {
         userId: JSON.parse(localStorage.getItem("user"))?.userId,
       },
     });
-    console.log(response.data);
     dispatch(addKitchen(response.data.data));
   };
 

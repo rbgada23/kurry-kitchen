@@ -3,10 +3,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaArrowLeft, FaCartPlus } from "react-icons/fa";
 import MenuCard from "../Kitchen/MenuCard";
-import { useDispatch, useSelector } from "react-redux";
-import { addItemToCart } from "../../utils/customerSlice";
+import { useSelector } from "react-redux";
 import CartSidebar from "./cartSidebar";
-
+import CustomerHeader from "./customerHeader";
 
 const KitchenDetails = () => {
   const { id } = useParams();
@@ -14,9 +13,8 @@ const KitchenDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const dispatch = useDispatch();
   const cartItemsCount = useSelector((state) => state.customer?.cartItems);
-  const totalItemCount = Object.keys(cartItemsCount).length;
+  const totalItemCount = cartItemsCount[id]?.length || 0;
 
   useEffect(() => {
     const fetchKitchenDetails = async () => {
@@ -46,6 +44,7 @@ const KitchenDetails = () => {
   return (
     <React.Fragment>
       <div className="bg-gray-100 h-screen">
+        <CustomerHeader cartCount={totalItemCount} openCartSidebar={() => setIsSidebarOpen(true)} />
         <div className="p-6 flex justify-between items-center ml-10 mr-4">
           <button
             onClick={() => window.history.back()}
@@ -54,23 +53,13 @@ const KitchenDetails = () => {
             <FaArrowLeft className="mr-2" />
             Back
           </button>
-          <button
-            className="relative px-4 py-2 bg-custom-green text-white rounded hover:bg-emerald-600"
-            onClick={() => setIsSidebarOpen(true)}
-          >
-            <FaCartPlus size={30} />
-            {totalItemCount > 0 && (
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
-                {totalItemCount}
-              </span>
-            )}
-          </button>
         </div>
 
 
         <div className="p-6 ml-10 flex w-full">
           {kitchen.map((menuItem) => (
             <MenuCard
+              kitchenId={id}
               key={menuItem._id}
               _id={menuItem._id}
               name={menuItem.name}
@@ -78,13 +67,10 @@ const KitchenDetails = () => {
               type={menuItem.type}
               price={menuItem.price}
               isFromCustomerPage={true}
-              addToCart={() =>
-                dispatch(addItemToCart(menuItem))
-              }
             />
           ))}
         </div>
-        <CartSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        <CartSidebar kitchenId={id} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       </div>
     </React.Fragment>
   );

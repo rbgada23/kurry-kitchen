@@ -5,8 +5,8 @@ import { kitchenIMG } from "../../utils/constants";
 
 const KitchenCard = ({ kitchenName, postarPath, description, onClick }) => {
   return (
-    <div onClick={onClick} className="cursor-pointer transition-all duration-700 hover:scale-110">
-      <div className="w-1/2 bg-white border-2 rounded-lg">
+    // <div onClick={onClick} className="cursor-pointer transition-all duration-700 hover:scale-110">
+      <div onClick={onClick} className="cursor-pointer hover:scale-110 duration-700 transition-all w-1/5 mr-8 bg-white border-2 rounded-lg">
         <img
           className="object-cover rounded-lg shadow-lg  cursor-pointer"
           alt="Kitchen Card"
@@ -17,7 +17,7 @@ const KitchenCard = ({ kitchenName, postarPath, description, onClick }) => {
           {description}
         </p>
       </div>
-    </div>
+    // </div>
   );
 };
 

@@ -14,10 +14,7 @@ const useKitchenList = () => {
       const response = await axios.get("http://localhost:3001/kitchen/all", {
         withCredentials: true
       });
-      console.log("res-kit", response.data);
       if (response && response?.data?.data?.length) {
-        // const data = kitchenList;
-        // console.log(data);
         dispatch(addKitchenList(response.data.data));
       }
 

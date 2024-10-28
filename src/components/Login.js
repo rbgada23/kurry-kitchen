@@ -38,7 +38,6 @@ const Login = () => {
           userObj
         );
 
-        console.log(response);
         if (response && response.status === 200 && response.data) {
           const userInfo = {
             email: response.data.data.emailId,

@@ -49,7 +49,7 @@ const Body = () => {
       ),
     },
     {
-      path: "/billing",
+      path: "/billing/:id",
       element: (
         <ProtectedRoute>
           <OrderBilling />

@@ -32,7 +32,6 @@ const useUserProfile = () => {
           : navigate("/customer");
       }
 
-      console.log(userProfile.data);
     } catch (error) {
       console.error("API call failed:", error);
     }

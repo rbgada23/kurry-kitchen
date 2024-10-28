@@ -9,7 +9,6 @@ export const getKitchenMenu = async () => {
       }
     );
 
-    console.log(response.data);
   } catch (error) {
     console.error("API call failed:", error);
   }

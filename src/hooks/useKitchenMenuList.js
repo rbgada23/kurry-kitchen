@@ -15,7 +15,6 @@ const useKitchenMenuList = () => {
         kitchen: kitchen._id,
       },
     });
-    console.log(response.data);
     dispatch(addKitchenMenu(response.data.data));
   };
 

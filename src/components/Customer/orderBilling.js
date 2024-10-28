@@ -1,9 +1,11 @@
 import React from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 const OrderBilling = () => {
-    // Sample data
+
+    const { id } = useParams();
     const deliveryAddress = {
         name: "John Doe",
         street: "123 Main St",
@@ -14,7 +16,8 @@ const OrderBilling = () => {
     };
 
     const cartItems = useSelector((state) => state.customer.cartItems);
-    const totalAmount = Object.values(cartItems).reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+    const cartItemLists = cartItems[id];
+    const totalAmount = cartItems[id].reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
             <div className='flex items-center text-custom-green w-1/2 justify-between mb-6'>
@@ -39,8 +42,8 @@ const OrderBilling = () => {
             <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-1/2">
                 <h2 className="text-xl text-custom-green font-semibold mb-4">Your Cart</h2>
                 <ul className="divide-y p-2 divide-gray-200">
-                    {Object.entries(cartItems).map(([id, item]) => (
-                        <li key={id} className="flex shadow-md justify-between items-center p-4">
+                    {cartItemLists.map((item, key) => (
+                        <li key={key} className="flex shadow-md justify-between items-center p-4">
                             <img
                                 src={
                                     "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_100/RX_THUMBNAIL/IMAGES/VENDOR/2024/9/17/ca7cc541-4ba2-48c2-8de6-f09ed033b945_62876.jpg"

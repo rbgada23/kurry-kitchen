@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaEdit } from "react-icons/fa";
 import { addItemToCart, removeItemFromCart } from "../../utils/customerSlice";
 
-const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage }) => {
+const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.customer?.cartItems);
-  const cartItem = cartItems?.[_id];
+  const cartItem = cartItems?.[kitchenId]?.find((item) => item.id === _id);
 
   return (
     <div className="w-1/6 min-h-[350px] rounded-lg overflow-hidden shadow-lg bg-white mr-8 flex flex-col justify-between">
@@ -44,7 +44,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage }) => {
           {cartItem ? (
             <div className="flex items-center space-x-2">
               <button
-                onClick={() => dispatch(removeItemFromCart({ id: _id }))}
+                onClick={() => dispatch(removeItemFromCart({ kitchenId: kitchenId, itemId: _id }))}
                 className="px-3 py-1 bg-red-500 text-white rounded-l hover:bg-red-600"
               >
                 -
@@ -53,7 +53,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage }) => {
                 {cartItem.quantity}
               </span>
               <button
-                onClick={() => dispatch(addItemToCart({ id: _id, name, items, type, price }))}
+                onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, item: { id: _id, name, items, type, price } }))}
                 className="px-3 py-1 bg-green-500 text-white rounded-r hover:bg-green-600"
               >
                 +
@@ -61,17 +61,16 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage }) => {
             </div>
           ) : (
             <button
-              onClick={() =>
-                dispatch(addItemToCart({ id: _id, name, items, type, price }))
-              }
+              onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, item: { id: _id, name, items, type, price } }))}
               className="w-full bg-custom-green text-white py-2 rounded-lg"
             >
               Add
             </button>
           )}
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 

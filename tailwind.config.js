@@ -9,6 +9,9 @@ module.exports = {
         colors: {
           'custom-green': '#0C6355',
         },
+        fontFamily: {
+          fantasy: ['fantasy'],
+        },
       },
     },
     daisyui: {
