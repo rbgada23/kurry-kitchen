@@ -1,12 +1,17 @@
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-router-dom";
 import React, { useEffect } from "react";
 import Login from "./Login";
-import Seller from "./Seller";
-import Customer from "./Customer";
+import Seller from "./Seller/Seller";
+import AllKitchens from "./Customer/AllKitchens";
 import KitchenDetails from "./Customer/KitchenDetails";
-import OrderBilling from "./Customer/orderBilling";
+import OrderBilling from "./Customer/OrderBilling";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import KitchenMenu from "./Kitchen/KitchenMenu";
+import KitchenOrders from "./Kitchen/KitchenOrders";
+import KitchenDashboard from "./Kitchen/KitchenDashboard";
+import CustomerOrder from "./Customer/CustomerOrder";
+import CustomerProfile from "./Customer/CustomerProfile";
 
 const ProtectedRoute = ({ children }) => {
   const user = localStorage.getItem('user');
@@ -33,10 +38,50 @@ const Body = () => {
       ),
     },
     {
-      path: "/customer",
+      path: "/kitchen/menu",
       element: (
         <ProtectedRoute>
-          <Customer />
+          <KitchenMenu />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/kitchen/orders",
+      element: (
+        <ProtectedRoute>
+          <KitchenOrders />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/kitchen/dashboard",
+      element: (
+        <ProtectedRoute>
+          <KitchenDashboard />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/customer/kitchens",
+      element: (
+        <ProtectedRoute>
+          <AllKitchens />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/customer/orders",
+      element: (
+        <ProtectedRoute>
+          <CustomerOrder />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/customer/profile",
+      element: (
+        <ProtectedRoute>
+          <CustomerProfile />
         </ProtectedRoute>
       ),
     },
@@ -62,7 +107,17 @@ const Body = () => {
   return (
     <div>
       <RouterProvider router={appRouter} ></RouterProvider>
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
     </div>
   );
 };

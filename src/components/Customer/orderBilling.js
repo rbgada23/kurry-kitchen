@@ -1,11 +1,40 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { clearCart } from '../../utils/customerSlice';
+import { HiOutlineShoppingCart } from "react-icons/hi2";
 
 const OrderBilling = () => {
-
+    const [userId, setUserId] = useState('');
+    const [isOrderPlaced, setOrderPlaced] = useState(false);
     const { id } = useParams();
+    const cartItems = useSelector((state) => state.customer.cartItems);
+    const cartItemLists = cartItems[id] || [];
+    const totalAmount = cartItemLists.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        getUserData();
+    }, []);
+
+    const getUserData = () => {
+        try {
+            const user = localStorage.getItem('user');
+            if (user) {
+                const parsedUser = JSON.parse(user);
+                const userId = parsedUser.userId;
+                setUserId(userId);
+            } else {
+                console.log("User not found in localStorage.");
+            }
+        } catch (error) {
+            console.error("Error retrieving user from localStorage:", error);
+        }
+    };
+
     const deliveryAddress = {
         name: "John Doe",
         street: "123 Main St",
@@ -15,11 +44,43 @@ const OrderBilling = () => {
         phone: "(555) 123-4567",
     };
 
-    const cartItems = useSelector((state) => state.customer.cartItems);
-    const cartItemLists = cartItems[id];
-    const totalAmount = cartItems[id].reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+    const placeOrder = async () => {
+        try {
+            const transformedItems = cartItemLists.map(item => ({
+                menuItemId: item.id,
+                quantity: item.quantity,
+                price: item.price
+            }));
+            const response = await axios.post(
+                "http://localhost:3001/order",
+                {
+                    kitchenId: id,
+                    userId: userId,
+                    items: transformedItems,
+                    totalAmount: totalAmount,
+                    deliveryAddress: deliveryAddress.street,
+                    orderStatus: "pending",
+                    platform: "app",
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+
+            console.log("Order placed successfully:", response.data);
+            toast.success("Order placed successfully");
+
+            // Clear cart for the kitchen and mark order as placed
+            dispatch(clearCart(id)); // Redux action to clear cart for the kitchen
+            setOrderPlaced(true); // Show thank-you note
+        } catch (error) {
+            console.error("Error placing order:", error);
+            toast.error("Failed to place the order. Please try again.");
+        }
+    };
+
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
             <div className='flex items-center text-custom-green w-1/2 justify-between mb-6'>
                 <button
                     onClick={() => window.history.back()}
@@ -30,47 +91,60 @@ const OrderBilling = () => {
                 </button>
                 <h1 className="text-2xl text-custom-green font-bold mx-auto flex-grow text-center">Billing Information</h1>
             </div>
+            {!isOrderPlaced ? (
+                <React.Fragment>
+                    <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-1/2">
+                        <h2 className="text-xl text-custom-green font-semibold mb-4">Delivery Address</h2>
+                        <p>{deliveryAddress.name}</p>
+                        <p>{deliveryAddress.street}</p>
+                        <p>{`${deliveryAddress.city}, ${deliveryAddress.state} ${deliveryAddress.zip}`}</p>
+                        <p>{deliveryAddress.phone}</p>
+                    </div>
 
-            <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-1/2">
-                <h2 className="text-xl text-custom-green font-semibold mb-4">Delivery Address</h2>
-                <p>{deliveryAddress.name}</p>
-                <p>{deliveryAddress.street}</p>
-                <p>{`${deliveryAddress.city}, ${deliveryAddress.state} ${deliveryAddress.zip}`}</p>
-                <p>{deliveryAddress.phone}</p>
-            </div>
+                    <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-1/2">
+                        <h2 className="text-xl text-custom-green font-semibold mb-4">Your Cart</h2>
+                        {cartItemLists && cartItemLists.length ? <ul className="divide-y p-2 divide-gray-200">
+                            {cartItemLists.map((item, key) => (
+                                <li key={key} className="flex shadow-md justify-between items-center p-4">
+                                    <img
+                                        src={
+                                            "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_100/RX_THUMBNAIL/IMAGES/VENDOR/2024/9/17/ca7cc541-4ba2-48c2-8de6-f09ed033b945_62876.jpg"
+                                        }
+                                        alt={item.name}
+                                        className="w-16 h-16 object-cover rounded-lg"
+                                    />
+                                    <div className="flex-grow ml-4">
+                                        <h3 className="font-semibold text-gray-800">{item.name}</h3>
+                                        <p className="text-gray-600">Price: ${item.price.toFixed(2) * item.quantity}</p>
+                                        <p className="text-gray-600">Quantity: {item.quantity}</p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul> : <div className="flex flex-col items-center justify-center h-48 bg-gray-100">
+                            <HiOutlineShoppingCart className="text-6xl text-gray-500 mb-4" />
+                            <p className="text-xl text-gray-700 font-semibold">Your cart is empty</p>
+                        </div>
+                        }
+                    </div>
 
-            <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-1/2">
-                <h2 className="text-xl text-custom-green font-semibold mb-4">Your Cart</h2>
-                <ul className="divide-y p-2 divide-gray-200">
-                    {cartItemLists.map((item, key) => (
-                        <li key={key} className="flex shadow-md justify-between items-center p-4">
-                            <img
-                                src={
-                                    "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_100/RX_THUMBNAIL/IMAGES/VENDOR/2024/9/17/ca7cc541-4ba2-48c2-8de6-f09ed033b945_62876.jpg"
-                                }
-                                alt={item.name}
-                                className="w-16 h-16 object-cover rounded-lg"
-                            />
-                            <div className="flex-grow ml-4">
-                                <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                                <p className="text-gray-600">Price: ${item.price.toFixed(2) * item.quantity}</p>
-                                <p className="text-gray-600">Quantity: {item.quantity}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
-            <div className="bg-white shadow-md rounded-lg p-6 w-1/2">
-                <h2 className="text-xl text-custom-green font-semibold mb-4">Total Price</h2>
-                <p className="text-lg font-bold">${totalAmount}</p>
-            </div>
-
-            <button
-                className="w-1/2 mt-4 bg-custom-green text-white py-2 rounded-lg"
-            >
-                Place Order
-            </button>
+                    <div className="bg-white shadow-md rounded-lg p-6 w-1/2">
+                        <h2 className="text-xl text-custom-green font-semibold mb-4">Total Price</h2>
+                        <p className="text-lg font-bold">${totalAmount}</p>
+                    </div>
+                    <button
+                        onClick={placeOrder}
+                        className={`w-1/2 mt-4 ${cartItemLists.length ? 'bg-custom-green' : 'bg-slate-400'} text-white py-2 rounded-lg`}
+                        disabled={cartItemLists.length ? false : true}
+                    >
+                        Place Order
+                    </button>
+                </React.Fragment>
+            ) : (
+                <div className="bg-white shadow-md rounded-lg p-6 text-center">
+                    <h2 className="text-2xl text-custom-green font-bold mb-4">Thank You!</h2>
+                    <p className="text-lg">Your order has been placed successfully.</p>
+                </div>
+            )}
         </div>
     );
 };

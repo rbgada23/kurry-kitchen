@@ -33,7 +33,7 @@ const CartSidebar = ({ kitchenId, isOpen, onClose, isCommonSidebar }) => {
                         <div className="text-center text-gray-500">Your cart is empty</div>
                     ) : (
                         <ul className="divide-y p-2 divide-gray-200">
-                            {cartItemLists.map((item, key) => (
+                            {cartItemLists && cartItemLists.length && cartItemLists.map((item, key) => (
                                 <li key={key} className="flex shadow-md justify-between items-center p-4">
                                     <img
                                         src={
@@ -63,7 +63,7 @@ const CartSidebar = ({ kitchenId, isOpen, onClose, isCommonSidebar }) => {
 
                 {isCommonSidebar && <div>
                     <ul className="divide-y p-2 divide-gray-200">
-                        {cartItemLists.map(([id, items]) => (
+                        {cartItemLists && cartItemLists.length && cartItemLists.map(([id, items]) => (
                             <React.Fragment key={id}>
                                 <li key={id} className="flex shadow-md justify-between items-center mb-2 mt-2 p-4">
                                     <div className="flex-grow ml-4">

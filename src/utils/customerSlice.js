@@ -56,9 +56,18 @@ const customerSlice = createSlice({
             }
             saveCartToLocalStorage(state.cartItems);
         },
+        clearCart: (state, action) => {
+            const kitchenId = action.payload; // action.payload is the kitchenId
+            if (kitchenId) {
+                delete state.cartItems[kitchenId]; // Clear cart for specific kitchen
+            } else {
+                state.cartItems = {}; // Clear cart for all kitchens
+            }
+            saveCartToLocalStorage(state.cartItems);
+        },
     },
 });
 
-export const { addItemToCart, removeItemFromCart } = customerSlice.actions;
+export const { addItemToCart, removeItemFromCart, clearCart } = customerSlice.actions;
 
 export default customerSlice.reducer;

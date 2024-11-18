@@ -1,12 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaEdit } from "react-icons/fa";
 import { addItemToCart, removeItemFromCart } from "../../utils/customerSlice";
+import MenuForm from "./MenuForm";
+import { MdDelete } from "react-icons/md";
+import { toast } from 'react-toastify';
 
 const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.customer?.cartItems);
   const cartItem = cartItems?.[kitchenId]?.find((item) => item.id === _id);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const openDeleteModal = () => {
+    setDeleteModalOpen(true);
+  }
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
+  }
+
+  const handleConfirmDelete = () => {
+    setDeleteModalOpen(false);
+    toast.success("Menu deleted successfully");
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="w-1/6 min-h-[350px] rounded-lg overflow-hidden shadow-lg bg-white mr-8 flex flex-col justify-between">
@@ -28,16 +54,59 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
           <div className="text-lg flex items-center justify-between mb-2">
             <h2 className="font-semibold text-gray-800">{name}</h2>
             {!isFromCustomerPage && (
-              <FaEdit className="text-2xl text-gray-500 cursor-pointer hover:text-gray-700" />
+              <div className="flex">
+                <FaEdit className="text-2xl text-custom-green cursor-pointer hover:text-gray-700" onClick={openModal} />
+                <MdDelete className="text-2xl text-rose-700 cursor-pointer hover:text-rose-800" onClick={openDeleteModal} />
+              </div>
+
             )}
           </div>
 
+          <MenuForm isModalOpen={isModalOpen} closeModal={closeModal} isEdit={true} menuData={{
+            name, type, price, items
+          }} />
+
           <div className="text-lg flex items-center justify-between mt-5">
             <p className="text-gray-600 text-2xl mb-2">{items}</p>
-            <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
           </div>
         </div>
       </div>
+
+      <dialog
+        open={isDeleteModalOpen}
+        id="delete_warning_modal"
+        className={`modal ${isDeleteModalOpen ? "modal-open" : "hidden"}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            closeDeleteModal();
+          }
+        }}
+      >
+        <div className="modal-box bg-white rounded-lg shadow-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Are you sure you want to delete?
+          </h2>
+          <p className="text-sm text-gray-600 mb-6">
+            This action cannot be undone. Please confirm if you wish to proceed with the deletion.
+          </p>
+          <div className="modal-action justify-end">
+            <button
+              type="button"
+              className="btn bg-slate-200 text-gray-800 hover:bg-slate-300"
+              onClick={closeDeleteModal}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn bg-red-600 text-white hover:bg-red-700"
+              onClick={handleConfirmDelete}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </dialog>
 
       {isFromCustomerPage && (
         <div className="p-4 mt-auto flex items-center justify-center">

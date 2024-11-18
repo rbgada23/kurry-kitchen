@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 const KitchenList = ({ title, kitchenList }) => {
   const navigate = useNavigate();
 
-  const handleCardClick = (kitchenId) => {
-    navigate(`/kitchen/${kitchenId}`);
+  const handleCardClick = (kitchenId, name) => {
+    navigate(`/kitchen/${kitchenId}`, { state: { kitchenName: name } });
   };
 
   return (
@@ -15,9 +15,9 @@ const KitchenList = ({ title, kitchenList }) => {
       <FilterKitchen />
       <div className="flex ">
         <div className="flex">
-          {kitchenList?.map((kitchen) => (
+          {kitchenList && kitchenList?.map((kitchen) => (
             <KitchenCard
-              onClick={() => handleCardClick(kitchen._id)}
+              onClick={() => handleCardClick(kitchen._id, kitchen.name)}
               key={kitchen._id}
               kitchenName={kitchen.name}
               postarPath={kitchen.postarPath}

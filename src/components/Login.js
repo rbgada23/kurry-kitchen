@@ -50,7 +50,7 @@ const Login = () => {
           dispatch(
             addUser(userInfo)
           );
-          navigate(response.data.data.userType == SELLER ? "/kitchen" : "/customer");
+          navigate(response.data.data.userType == SELLER ? "/kitchen/menu" : "/customer/kitchens");
         }
       } catch (error) {
         toast.error(error?.response?.data)
@@ -77,7 +77,7 @@ const Login = () => {
           dispatch(
             addUser(userInfo)
           );
-          navigate(response.data.userType == SELLER ? "/kitchen" : "/customer");
+          navigate(response.data.userType == SELLER ? "/kitchen/menu" : "/customer/kitchens");
         }
 
       } catch (error) {

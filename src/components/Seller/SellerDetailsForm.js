@@ -20,7 +20,6 @@ const SellerDetailsForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., send data to an API)
     postKitchen();
   };
 
@@ -36,7 +35,7 @@ const SellerDetailsForm = () => {
         "http://localhost:3001/kitchen",
         kitchenObj,
         {
-          withCredentials: true, // Ensure cookies are included in the request
+          withCredentials: true,
         }
       );
       if (response) {
@@ -47,12 +46,8 @@ const SellerDetailsForm = () => {
     }
   };
 
- 
-
   return (
     <div>
-      {" "}
-      
       <dialog id="my_modal_1" className="modal ">
         <div className="modal-box bg-white">
           <h3 className="font-bold text-lg">
@@ -96,7 +91,6 @@ const SellerDetailsForm = () => {
 
           <div className="modal-action">
             <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
               <button
                 className="btn bg-custom-green text-white"
                 onClick={handleSubmit}
