@@ -4,19 +4,21 @@ import { CheckIcon, XIcon } from "@heroicons/react/solid";
 import KitchenLayout from "./KitchenLayout";
 import { SERVER_URL } from "../../utils/constants";
 import { toast } from 'react-toastify';
+import { useSelector } from "react-redux";
 
 const KitchenOrdersPage = () => {
     const [orders, setOrders] = useState([]);
+    const kitchen = useSelector((store) => store.kitchen.kitchenObj);
 
     useEffect(() => {
         fetchOrders();
-    }, []);
+    }, [kitchen]);
 
     const fetchOrders = async () => {
         try {
             const timeout = new Promise((resolve) => setTimeout(resolve, 500));
             const [response] = await Promise.all([
-                axios.get(`${SERVER_URL}/order/all`, { withCredentials: true }),
+                axios.get(`${SERVER_URL}/order?kitchenId=${kitchen._id}`, { withCredentials: true }),
                 timeout,
             ]);
 
@@ -78,9 +80,10 @@ const KitchenOrdersPage = () => {
                                 <thead className="bg-gray-200 sticky top-0 z-10">
                                     <tr className="text-left text-gray-700">
                                         <th className="p-4 font-semibold">Action</th>
-                                        <th className="p-4 font-semibold">Order ID</th>
                                         <th className="p-4 font-semibold">User</th>
                                         <th className="p-4 font-semibold">Items</th>
+                                        <th className="p-4 font-semibold">Quantity</th>
+
                                         <th className="p-4 font-semibold">Total Amount</th>
                                         <th className="p-4 font-semibold">Delivery Address</th>
                                         <th className="p-4 font-semibold">Order Status</th>
@@ -108,12 +111,18 @@ const KitchenOrdersPage = () => {
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td className="p-4 whitespace-nowrap">{order._id}</td>
-                                            <td className="p-4 whitespace-nowrap">{order.user_name}</td>
+                                            <td className="p-4 whitespace-nowrap">{order.userObj.firstName}</td>
                                             <td className="p-4 whitespace-nowrap">
                                                 {order.items.map((item, index) => (
                                                     <div key={index}>
-                                                        {item.menuItemId} (Qty: {item.quantity})
+                                                        {item?.menuItemObj?.name}
+                                                    </div>
+                                                ))}
+                                            </td>
+                                            <td className="p-4 whitespace-nowrap">
+                                                {order.items.map((item, index) => (
+                                                    <div key={index}>
+                                                        {item.quantity}
                                                     </div>
                                                 ))}
                                             </td>
