@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addKitchen } from "../../utils/kitchenSlice";
 import axios from "axios";
+import useUserProfile from "../../hooks/useUserProfile";
 
-const SellerDetailsForm = () => {
+const SellerDetailsForm = ({ isKitchenFormModalOpen, closeKitchenFormModal,test }) => {
   const user = useSelector((store) => store.user);
   const kitchen = useSelector((store) => store.kitchen.kitchenObj);
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-
+  useUserProfile();
   useEffect(() => {
+    console.log(test)
     if (kitchen) {
-        document.getElementById("my_modal_1").open = false;
+      console.log("called closed");
+      closeKitchenFormModal();
     }
   }, [kitchen]);
 
@@ -47,8 +50,9 @@ const SellerDetailsForm = () => {
   };
 
   return (
-    <div>
-      <dialog id="my_modal_1" className="modal ">
+    <div>{test}
+      <dialog id="kitchen_form_modal"
+        className={`modal ${isKitchenFormModalOpen ? "modal-open" : "hidden"}`}>
         <div className="modal-box bg-white">
           <h3 className="font-bold text-lg">
             Please complete your profile to proceed

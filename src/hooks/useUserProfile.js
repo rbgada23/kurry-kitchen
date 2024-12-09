@@ -25,6 +25,7 @@ const useUserProfile = () => {
           displayName: userProfile.data.data.firstName,
           userType: userProfile.data.data.userType,
           userId: userProfile.data.data._id,
+          contactNumber : userProfile?.data?.data?.contactNumber
         };
         dispatch(addUser(userInfo));
         userProfile?.data.data.userType == SELLER

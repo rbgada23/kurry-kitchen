@@ -18,14 +18,17 @@ const KitchenDetails = () => {
   const cartItemsCount = useSelector((state) => state.customer?.cartItems);
   const totalItemCount = cartItemsCount[id]?.length || 0;
   const kitchenName = state?.kitchenName;
-  console.log('sdsds', kitchenName);
+  console.log("sdsds", kitchenName);
 
   useEffect(() => {
     const fetchKitchenDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/kitchen/kitchenMenu?kitchen=${id}`, {
-          withCredentials: true
-        });
+        const response = await axios.get(
+          `http://localhost:3001/kitchen/kitchenMenu?kitchen=${id}`,
+          {
+            withCredentials: true,
+          }
+        );
         setKitchen(response.data.data);
       } catch (error) {
         setError("Failed to fetch kitchen details");
@@ -51,11 +54,16 @@ const KitchenDetails = () => {
         {kitchenName && (
           <div className="px-6 flex justify-between items-center ml-10 mr-4">
             <h3 className="text-xl cursor-pointer flex font-bold text-custom-green">
-              <FaArrowLeft onClick={() => window.history.back()} className="mr-2" /> {kitchenName}
+              <FaArrowLeft
+                onClick={() => window.history.back()}
+                className="mr-2"
+              />{" "}
+              {kitchenName}
             </h3>
           </div>
         )}
         <div className="p-6 ml-10 flex w-full">
+
           {kitchen.map((menuItem) => (
             <MenuCard
               kitchenId={id}
@@ -69,7 +77,11 @@ const KitchenDetails = () => {
             />
           ))}
         </div>
-        <CartSidebar kitchenId={id} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        <CartSidebar
+          kitchenId={id}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
       </div>
     </CustomerLayout>
   );

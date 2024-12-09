@@ -14,16 +14,18 @@ const KitchenList = ({ title, kitchenList }) => {
     <div className="mt-20">
       <FilterKitchen />
       <div className="flex ">
+
         <div className="flex">
-          {kitchenList && kitchenList?.map((kitchen) => (
-            <KitchenCard
-              onClick={() => handleCardClick(kitchen._id, kitchen.name)}
-              key={kitchen._id}
-              kitchenName={kitchen.name}
-              postarPath={kitchen.postarPath}
-              description={kitchen.address}
-            />
-          ))}{" "}
+          {kitchenList &&
+            kitchenList?.map((kitchen) => (
+              <KitchenCard
+                onClick={() => handleCardClick(kitchen._id, kitchen.name)}
+                key={kitchen._id}
+                kitchenName={kitchen.name}
+                postarPath={kitchen.postarPath}
+                description={kitchen.address}
+              />
+            ))}{" "}
         </div>
       </div>
     </div>

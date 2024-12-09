@@ -112,6 +112,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
         dispatch(addKitchenMenu([response.data.data]));
         toast.success("Menu added successfully")
       }
+      toast.success("Menu Added");
     } catch (error) {
       console.error("API call failed:", error);
     }
