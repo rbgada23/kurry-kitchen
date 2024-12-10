@@ -34,6 +34,10 @@ const KitchenMenu = () => {
         setIsKitchenFormModalOpen(true);
     };
 
+    const closeKitchenFormModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <React.Fragment>
             {kitchen ? (
