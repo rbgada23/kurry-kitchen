@@ -10,17 +10,15 @@ const AllKitchens = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   useKitchenList();
   const kitchenList = useSelector((store) => store.kitchen.kitchenList);
-  const cartItemsCount = useSelector((state) => state.customer?.cartItems);
+    const cartItemsCount = useSelector((state) => state.customer?.cartItems);
   const totalItemCount = Object.keys(cartItemsCount).length;
 
   return (
     <CustomerLayout>
-      <div className="">
+      <div className="h-screen overflow-scroll">
         {/* <CustomerHeader cartCount={totalItemCount} openCartSidebar={() => setIsSidebarOpen(true)} /> */}
-        <div className="absolute" >
-          <div className=" mt-0 pl-4 md:pl-20">
-            <KitchenList title={"All Kitchens"} kitchenList={kitchenList} />
-          </div>
+        <div className="mt-0 pl-4 md:pl-20">
+          <KitchenList title={"All Kitchens"} kitchenList={kitchenList} />
         </div>
         {/* <CartSidebar isCommonSidebar={true} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} /> */}
       </div>

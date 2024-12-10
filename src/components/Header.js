@@ -25,13 +25,12 @@ const Header = () => {
   };
 
   return (
-    <div className="absolute w-full px-8 py-4 z-10 flex flex-row items-center justify-between">
+    <div className="absolute mt-9 w-full px-8 py-4 z-10 flex flex-row items-center justify-between">
       <div className="flex-grow" />
-
       <div className="font-serif text-3xl text-custom-green font-bold absolute left-1/2 transform -translate-x-1/2">
         K u r r y &nbsp; K i t c h e n
       </div>
-      {true && (
+      {/* {true && (
         <div className="flex items-center p-2 justify-end">
           {!user && (
             <button
@@ -62,7 +61,7 @@ const Header = () => {
             </button>
           )}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

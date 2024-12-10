@@ -13,8 +13,8 @@ const KitchenList = ({ title, kitchenList }) => {
   return (
     <div className="mt-20">
       <FilterKitchen />
-      <div className="flex ">
-        <div className="flex">
+      <div className="h-5/6">
+        <div className="flex flex-wrap gap-6 w-full overflow-y-auto">
           {kitchenList && kitchenList?.map((kitchen) => (
             <KitchenCard
               onClick={() => handleCardClick(kitchen._id, kitchen.name)}

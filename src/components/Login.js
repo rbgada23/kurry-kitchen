@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Header from "./Header";
 import { useSelector } from "react-redux";
 import { SELLER } from "../utils/constants";
@@ -15,8 +15,9 @@ const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [user, setUser] = useState(null);
+  const [userType, setUserType] = useState(1);
 
-  const isSellerForm = useSelector((store) => store.form.isSellerForm);
+  // const isSellerForm = useSelector((store) => store.form.isSellerForm);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ const Login = () => {
         lastName: name.current.value,
         emailId: email.current.value,
         password: password.current.value,
-        userType: isSellerForm,
+        userType: userType,
       };
       try {
         const response = await axios.post(
@@ -99,7 +100,6 @@ const Login = () => {
   return (
     <div data-theme="light">
       <Header />
-      {/* <Toaster  children={"Sign up succesfull"} variant={"error"} /> */}
       <div className="absolute ">
         <img
           className="h-screen object-cover w-screen opacity-80"
@@ -109,53 +109,62 @@ const Login = () => {
       </div>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="w-full md:w-3/12 absolute p-12 bg-custom-green my-36 mx-auto right-0 left-0 text-white rounded-lg "
+        className="w-full max-w-2xl shadow-2xl absolute p-12 bg-custom-green my-36 mx-auto right-0 left-0 text-white rounded-lg "
       >
         <h1 className="font-bold text-3xl py-4">
           {isSignInForm ? "Sign In" : "Sign Up"}{" "}
-          {isSellerForm === SELLER ? "- Kitchen" : "- Customer"}
         </h1>
+
+        <select
+          className="select text-green-700 shadow-xl mt-1 my-4 text-black select-bordered w-full bg-slate-50"
+          value={userType}
+          onChange={(e) => setUserType(e.target.value)}
+        >
+          <option value={1}>Seller</option>
+          <option value={2}>Customer</option>
+        </select>
 
         {!isSignInForm && (
           <input
             ref={name}
             type="text"
             placeholder="Full Name"
-            className="p-4 my-4 w-full bg-white border text-black rounded-lg hover:border-green-200"
+            className="p-[11px] shadow-xl my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
           />
         )}
         <input
           ref={email}
           type="text"
           placeholder="Email Address"
-          className="p-4 my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
+          className="p-[11px] shadow-xl my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
         />
         <input
           ref={password}
           type="password"
           placeholder="Password"
-          className="p-4 my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
+          className="p-[11px] shadow-xl my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
         />
         {!isSignInForm && (
           <input
             ref={zipCode}
             type="text"
             placeholder="Enter your zip code"
-            className="p-4 my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
+            className="p-[11px] my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
           />
         )}
-        <p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>
+        {errorMessage && <p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>}
         <button
-          className="p-4 my-6 bg-[antiquewhite] text-custom-green w-full rounded-lg border font-bold"
+          className="p-[11px] shadow-xl my-4 bg-[#ce7b00] text-white w-full rounded-lg font-bold hover:bg-[#ea9e21] hover:text-white hover:shadow-2xl"
           onClick={handleButtonClick}
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
 
+
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
           {isSignInForm
-            ? "New to Kurry Kitchen? Sign Up Now"
-            : "Already registered? Sign In Now."}
+            ? <React.Fragment><span>{"New to Kurry Kitchen?"}</span> <span className="text-sky-500">{"Sign Up Now"}</span></React.Fragment>
+            : <React.Fragment><span>{"Already registered?"}</span> <span className="text-sky-500">{"Sign In Now."}</span></React.Fragment>}
         </p>
       </form>
     </div>

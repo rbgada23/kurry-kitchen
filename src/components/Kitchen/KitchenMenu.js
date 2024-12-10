@@ -29,7 +29,7 @@ const KitchenMenu = () => {
         <React.Fragment>
             {kitchen ?
                 <KitchenLayout>
-                    <div className="flex flex-col h-full p-6">
+                    <div className="flex flex-col h-screen p-6">
                         <div className="flex justify-between items-center py-4">
                             <h1 className="text-2xl font-bold text-custom-green">Menu</h1>
                             <button
@@ -60,7 +60,7 @@ const KitchenMenu = () => {
                                 </div>
                             </div>
                         ) : (
-                            <div className="flex w-full">
+                            <div className="flex flex-wrap gap-6 w-full overflow-y-auto">
                                 {kitchenMenuList.map((menu) => (
                                     <MenuCard
                                         isFromCustomerPage={false}
