@@ -112,7 +112,7 @@ const KitchenDashboard = () => {
                         <h2 className="text-lg font-semibold text-gray-700 mb-4">
                             Orders by Day (Line Chart)
                         </h2>
-                        <div style={{ width: "100%", height: "300px" }}>
+                        <div style={{ width: "1000px", height: "300px" }}>
                             <Line data={ordersByDayData} />
                         </div>
                     </div>
@@ -120,24 +120,13 @@ const KitchenDashboard = () => {
                         <h2 className="text-lg font-semibold text-gray-700 mb-4">
                             Monthly Orders (Bar Chart)
                         </h2>
-                        <div style={{ width: "100%", height: "300px" }}>
+                        <div style={{ width: "1000px", height: "300px" }}>
                             <Bar data={barData} />
                         </div>
                     </div>
                 </div>
 
-                {/* Right Section */}
-                <div className="flex-1 bg-white p-4 rounded shadow">
-                    <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                        Votes Distribution (Pie Chart)
-                    </h2>
-                    <div className="flex-1 p-4 flex justify-center items-center">
-                        <div style={{ width: "400px", height: "400px" }}>
-                            <Pie data={data} />
-                        </div>
-                    </div>
-
-                </div>
+            
             </div>
         </KitchenLayout>
     );

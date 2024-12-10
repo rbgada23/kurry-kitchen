@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTable } from "react-table";
 import { CheckIcon, XIcon } from "@heroicons/react/solid";
+import io from "socket.io-client";
 
 const OrderTable = ({ data }) => {
+  // Initialize socket connection
+  const socket = io.connect("http://localhost:3001"); // Update the URL if needed
   const columns = React.useMemo(
     () => [
       {
@@ -46,13 +49,29 @@ const OrderTable = ({ data }) => {
     alert(`Rejected order: ${rowData.order_name}`);
   };
 
+  useEffect(() => {
+    // Listen for 'newOrder' events from the server
+    socket.on('newOrder', (order) => {
+        console.log(order);
+        alert("New order placed");
+    });
+
+    // Clean up the socket connection
+    return () => socket.off('newOrder');
+  }, []);
+
+
   return (
-    <div className="overflow-x-auto mt-10">
+    <div
+      className={
+        "mt-10 max-h-[" + 300 + "px] overflow-y-auto overflow-x-auto relative"
+      }
+    >
       <table
         {...getTableProps()}
-        className="min-w-full bg-white shadow-md rounded-lg overflow-hidden"
+        className="min-w-full bg-white shadow-md rounded-lg"
       >
-        <thead className="bg-gray-200">
+        <thead className="bg-gray-200 sticky top-0 z-10">
           {headerGroups.map((headerGroup) => (
             <tr
               {...headerGroup.getHeaderGroupProps()}
@@ -66,7 +85,7 @@ const OrderTable = ({ data }) => {
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
+        <tbody {...getTableBodyProps()} className="divide-y divide-gray-200">
           {rows.map((row) => {
             prepareRow(row);
             return (

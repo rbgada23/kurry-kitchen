@@ -29,3 +29,7 @@
   padding-right: 11px;
   text-align: center;
 }
+
+.custom-shimmer-table{
+  height:30px !important;
+}

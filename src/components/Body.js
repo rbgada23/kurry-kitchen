@@ -33,7 +33,7 @@ const Body = () => {
       path: "/kitchen",
       element: (
         <ProtectedRoute>
-          <Seller />
+          <KitchenMenu />
         </ProtectedRoute>
       ),
     },

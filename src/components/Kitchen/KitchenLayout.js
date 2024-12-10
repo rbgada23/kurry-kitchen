@@ -15,7 +15,6 @@ const KitchenLayout = ({ children }) => {
         <div className="w-64">
           <KitchenSidebar />
         </div>
-
         <div className="flex-1 p-6 h-96">
           {children}
         </div>

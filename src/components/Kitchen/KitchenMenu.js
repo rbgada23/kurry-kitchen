@@ -6,16 +6,21 @@ import { useSelector } from "react-redux";
 import MenuCard from "./MenuCard";
 import KitchenLayout from "../Kitchen/KitchenLayout";
 import SellerDetailsForm from "../Seller/SellerDetailsForm";
+import { ShimmerButton, ShimmerDiv } from "shimmer-effects-react";
 
 const KitchenMenu = () => {
     useKitchenMenuList();
     const kitchenMenuList = useSelector((store) => store.kitchen.kitchenMenuList);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isKitchenFormModalOpen, setIsKitchenFormModalOpen] = useState(true);
+    const [shimmerLoader, setShimmerLoader] = useState(true);
     const kitchen = useSelector((store) => store.kitchen.kitchenObj);
 
-
     useEffect(() => {
-    }, [])
+        setTimeout(() => {
+            setShimmerLoader(false);
+        }, 500);
+    }, []);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -25,20 +30,26 @@ const KitchenMenu = () => {
         setIsModalOpen(false);
     };
 
+    const openKitcheFormModal = () => {
+        setIsKitchenFormModalOpen(true);
+    };
+
     return (
         <React.Fragment>
-            {kitchen ?
+            {kitchen ? (
                 <KitchenLayout>
                     <div className="flex flex-col h-screen p-6">
                         <div className="flex justify-between items-center py-4">
                             <h1 className="text-2xl font-bold text-custom-green">Menu</h1>
-                            <button
-                                onClick={openModal}
-                                className="flex items-center text-white bg-custom-green px-4 py-2 rounded-lg hover:bg-green-600"
-                            >
-                                <FaRegSquarePlus className="mr-2" />
-                                Add Menu
-                            </button>
+                            {shimmerLoader ? (
+                                <React.Fragment><ShimmerButton size="sm" mode="light" /></React.Fragment>) : (
+                                <button
+                                    onClick={openModal}
+                                    className="flex items-center text-white bg-custom-green px-4 py-2 rounded-lg hover:bg-green-600"
+                                >
+                                    <FaRegSquarePlus className="mr-2" />
+                                    Add Menu
+                                </button>)}
                         </div>
 
                         {/* Display "No menu available" when kitchenMenuList is empty */}
@@ -51,32 +62,53 @@ const KitchenMenu = () => {
                                     <p className="text-gray-500 mb-6">
                                         Please add a new menu to display here.
                                     </p>
-                                    <button
-                                        onClick={openModal}
-                                        className="text-white bg-custom-green px-6 py-2 rounded-lg hover:bg-green-600"
-                                    >
-                                        Add Menu
-                                    </button>
+                                    {shimmerLoader ? (
+                                        <React.Fragment><ShimmerButton size="sm" mode="light" /></React.Fragment>) : (
+                                        <button
+                                            onClick={openModal}
+                                            className="text-white bg-custom-green px-6 py-2 rounded-lg hover:bg-green-600"
+                                        >
+                                            Add Menu
+                                        </button>)}
                                 </div>
                             </div>
                         ) : (
                             <div className="flex flex-wrap gap-6 w-full overflow-y-auto">
-                                {kitchenMenuList.map((menu) => (
-                                    <MenuCard
-                                        isFromCustomerPage={false}
-                                        key={menu._id}
-                                        name={menu.name}
-                                        items={menu.items}
-                                        type={menu.type}
-                                        price={menu.price}
-                                    />
-                                ))}
+                                {shimmerLoader ? (
+                                    <React.Fragment>
+                                        <ShimmerDiv mode="light" height={300} width={350} className="mr-5" />
+                                        <ShimmerDiv mode="light" height={300} width={350} className="mr-5" />
+                                        <ShimmerDiv mode="light" height={300} width={350} className="mr-5" />
+                                    </React.Fragment>
+                                ) : (
+                                    <React.Fragment>
+                                        {kitchenMenuList.map((menu) => (
+                                            <MenuCard
+                                                isFromCustomerPage={false}
+                                                key={menu._id}
+                                                name={menu.name}
+                                                items={menu.items}
+                                                type={menu.type}
+                                                price={menu.price}
+                                            />
+                                        ))}
+                                    </React.Fragment>
+                                )}
                             </div>
                         )}
                     </div>
 
                     <MenuForm isModalOpen={isModalOpen} closeModal={closeModal} />
-                </KitchenLayout> : <KitchenLayout><SellerDetailsForm /></KitchenLayout>}
+                </KitchenLayout>
+            ) : (
+                <KitchenLayout>
+                    <SellerDetailsForm
+                        isKitchenFormModalOpen={isKitchenFormModalOpen}
+                        closeKitchenFormModal={closeKitchenFormModal}
+                        test={"test"}
+                    />
+                </KitchenLayout>
+            )}
         </React.Fragment>
     );
 };

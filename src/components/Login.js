@@ -32,6 +32,7 @@ const Login = () => {
         emailId: email.current.value,
         password: password.current.value,
         userType: userType,
+        contactNumber: contactNumber.current.value
       };
       try {
         const response = await axios.post(
@@ -44,7 +45,8 @@ const Login = () => {
             email: response.data.data.emailId,
             displayName: response.data.data.firstName,
             userType: response.data.data.userType,
-            userId: response.data.data._id
+            userId: response.data.data._id,
+            contactNumber: response.data.contactNumber
           };
           setUser(userInfo);
           localStorage.setItem('user', JSON.stringify(userInfo));
@@ -96,6 +98,7 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
   const zipCode = useRef(null);
+  const contactNumber = useRef(null);
 
   return (
     <div data-theme="light">
@@ -150,6 +153,14 @@ const Login = () => {
             type="text"
             placeholder="Enter your zip code"
             className="p-[11px] my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
+          />
+        )}
+        {!isSignInForm && (
+          <input
+            ref={contactNumber}
+            type="text"
+            placeholder="Enter your contact number"
+            className="p-4 my-4 w-full bg-white border text-green-700 rounded-lg hover:border-green-200"
           />
         )}
         {errorMessage && <p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>}
