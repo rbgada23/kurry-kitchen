@@ -93,18 +93,33 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   }
 
   const postMenu = async () => {
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("type", type);
+    formData.append("items", items);
+    formData.append("price", price);
+    formData.append("kitchen", kitchen._id);
+    if (fileName) {
+      const fileInput = document.getElementById("file-input").files[0];
+      formData.append("image", fileInput);
+    }
+
+
     const menuObj = {
       name,
       type,
       items,
       price,
       kitchen: kitchen._id,
+      image : document.getElementById("file-input").files[0]
     };
     try {
       const response = await axios.post(
         "http://localhost:3001/kitchen/kitchenMenu",
         menuObj,
         {
+          headers: { "Content-Type": "multipart/form-data" },
           withCredentials: true,
         }
       );
@@ -112,7 +127,6 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
         dispatch(addKitchenMenu([response.data.data]));
         toast.success("Menu added successfully")
       }
-      toast.success("Menu Added");
     } catch (error) {
       console.error("API call failed:", error);
     }

@@ -6,7 +6,7 @@ import MenuForm from "./MenuForm";
 import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
 
-const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId, kitchenName }) => {
+const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId, kitchenName,image }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.customer?.cartItems);
   const cartItem = cartItems?.[kitchenId]?.find((item) => item.id === _id);
@@ -39,9 +39,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
       <div>
         <div className="relative">
           <img
-            src={
-              "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2024/9/17/ca7cc541-4ba2-48c2-8de6-f09ed033b945_62876.jpg"
-            }
+            src={image}
             alt={name}
             className="w-full h-48 object-cover"
           />

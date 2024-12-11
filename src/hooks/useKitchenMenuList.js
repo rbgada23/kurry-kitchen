@@ -11,13 +11,37 @@ const useKitchenMenuList = () => {
   const getKitchenMenuList = async () => {
     if (!kitchen?._id) return;
     try {
-      const response = await axios.get("http://localhost:3001/kitchen/kitchenMenu", {
-        withCredentials: true,
-        params: {
-          kitchen: kitchen._id,
-        },
+      const response = await axios.get(
+        "http://localhost:3001/kitchen/kitchenMenu",
+        {
+          withCredentials: true,
+          params: {
+            kitchen: kitchen._id,
+          },
+        }
+      );
+      const menuData = response.data.data.map((menu) => {
+        const base64Image = menu.image
+          ? `data:image/jpeg;base64,${btoa(
+              String.fromCharCode(...new Uint8Array(menu.image.data.data))
+            )}`
+          : null;
+        return {
+          ...menu,
+          image: base64Image,
+        };
       });
-      dispatch(addKitchenMenu(response.data.data));
+
+      //   const menuData = response.data.data.map((menu) => {
+      //     if (menu.image && menu.image.data) {
+      //         const base64Image = `data:image/jpeg;base64,${btoa(
+      //             String.fromCharCode(...new Uint8Array(menu.image.data))
+      //         )}`;
+      //         return { ...menu, image: base64Image };
+      //     }
+      //     return menu; // No image data
+      // });
+      dispatch(addKitchenMenu(menuData));
     } catch (error) {
       console.error("Failed to fetch kitchen menu list:", error);
     }
