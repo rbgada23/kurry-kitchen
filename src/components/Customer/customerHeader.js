@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { removeUser } from "../../utils/userSlice";
 
 export default function CustomerHeader({ cartCount, isKitchenDetailsPage, openCartSidebar }) {
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const handleLogOut = () => {
         localStorage.clear();
