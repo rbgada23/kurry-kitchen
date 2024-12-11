@@ -94,6 +94,7 @@ const KitchenMenu = () => {
                                                 items={menu.items}
                                                 type={menu.type}
                                                 price={menu.price}
+                                                image={menu.image}
                                             />
                                         ))}
                                     </React.Fragment>

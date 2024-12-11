@@ -74,6 +74,7 @@ const KitchenDetails = () => {
               items={menuItem.items}
               type={menuItem.type}
               price={menuItem.price}
+              image={menuItem.image}
               isFromCustomerPage={true}
             />
           ))}
