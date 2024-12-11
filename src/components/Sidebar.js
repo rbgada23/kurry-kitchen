@@ -6,7 +6,7 @@ export default function Sidebar({ menuItems }) {
     const location = useLocation();
 
     return (
-        <div className="w-64 h-screen bg-custom-green text-white flex flex-col items-start p-6">
+        <div className="w-64 text-white flex flex-col items-start p-6">
             <ul className="w-full">
                 {menuItems.map((item) => {
                     const isActive = location.pathname === item.route;

@@ -19,7 +19,7 @@ export default function CustomerHeader({ cartCount, isKitchenDetailsPage, openCa
     };
 
     return (
-        <div className="w-full min-w-[1024px] flex bg-custom-green justify-start items-center flex-row h-20 pl-6 box-border">
+        <div className="w-full min-w-[1024px] flex bg-custom-green h-16 justify-start items-center flex-row pl-6 box-border">
             <MdOutlineDinnerDining size={60} color='white' />
             <span className="font-fantasy text-white font-extrabold text-3xl ml-2 mt-2">KURRY-KITCHEN</span>
 

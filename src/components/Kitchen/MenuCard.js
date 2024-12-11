@@ -6,7 +6,7 @@ import MenuForm from "./MenuForm";
 import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
 
-const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId }) => {
+const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId, kitchenName }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.customer?.cartItems);
   const cartItem = cartItems?.[kitchenId]?.find((item) => item.id === _id);
@@ -35,7 +35,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
   };
 
   return (
-    <div className="w-1/6 min-h-[350px] rounded-lg overflow-hidden shadow-lg bg-white mr-8 flex flex-col justify-between">
+    <div className="w-1/6 min-h-[350px] rounded-lg overflow-hidden shadow-lg bg-white flex flex-col justify-between">
       <div>
         <div className="relative">
           <img
@@ -122,7 +122,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
                 {cartItem.quantity}
               </span>
               <button
-                onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, item: { id: _id, name, items, type, price } }))}
+                onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, kitchenName: kitchenName, item: { id: _id, name, items, type, price } }))}
                 className="px-3 py-1 bg-green-500 text-white rounded-r hover:bg-green-600"
               >
                 +
@@ -130,7 +130,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
             </div>
           ) : (
             <button
-              onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, item: { id: _id, name, items, type, price } }))}
+              onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, kitchenName: kitchenName, item: { id: _id, name, items, type, price } }))}
               className="w-full bg-custom-green text-white py-2 rounded-lg"
             >
               Add

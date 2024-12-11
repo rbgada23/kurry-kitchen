@@ -27,17 +27,21 @@ const customerSlice = createSlice({
     },
     reducers: {
         addItemToCart: (state, action) => {
-            const { kitchenId, item } = action.payload; // action.payload should include kitchenId and item
+           
+            const { kitchenId, item, kitchenName } = action.payload; // action.payload should include kitchenId and item
+            console.log('kitchen name',kitchenName);
             if (!state.cartItems[kitchenId]) {
                 state.cartItems[kitchenId] = []; // Initialize as an array
             }
             const existingItemIndex = state.cartItems[kitchenId].findIndex(i => i.id === item.id);
+            // state.cartItems[kitchenId]['kitchenName'] = kitchenName;
             if (existingItemIndex >= 0) {
                 state.cartItems[kitchenId][existingItemIndex].quantity += 1; // Update quantity
             } else {
                 state.cartItems[kitchenId].push({
                     ...item,
                     quantity: 1,
+                    kitchenName: kitchenName
                 });
             }
             saveCartToLocalStorage(state.cartItems);
@@ -52,6 +56,10 @@ const customerSlice = createSlice({
                     } else {
                         state.cartItems[kitchenId].splice(existingItemIndex, 1); // Remove item
                     }
+                }
+                // If the kitchen list is empty, remove it
+                if (state.cartItems[kitchenId].length === 0) {
+                    delete state.cartItems[kitchenId];
                 }
             }
             saveCartToLocalStorage(state.cartItems);

@@ -105,7 +105,7 @@ const Body = () => {
 
 
   return (
-    <div>
+    <React.Fragment>
       <RouterProvider router={appRouter} ></RouterProvider>
       <ToastContainer
         position="top-right"
@@ -118,7 +118,7 @@ const Body = () => {
         draggable
         pauseOnHover
         theme="light" />
-    </div>
+    </React.Fragment>
   );
 };
 

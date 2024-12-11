@@ -62,10 +62,11 @@ const KitchenDetails = () => {
             </h3>
           </div>
         )}
-        <div className="p-6 ml-10 flex w-full">
+        <div className="p-6 ml-10 gap-4 flex flex-wrap w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 150px)" }}>
 
           {kitchen.map((menuItem) => (
             <MenuCard
+              kitchenName={kitchenName}
               kitchenId={id}
               key={menuItem._id}
               _id={menuItem._id}

@@ -13,13 +13,13 @@ const CustomerLayout = ({ children }) => {
     const cartItemsCount = useSelector((state) => state.customer?.cartItems);
     const totalItemCount = Object.keys(cartItemsCount).length;
     return (
-        <div className="bg-slate-50 min-h-screen flex flex-col">
-            <div className="w-full">
+        <div className="bg-slate-50 h-screen flex flex-col">
+            <div className="h-16 w-full">
                 <CustomerHeader cartCount={totalItemCount} openCartSidebar={() => setIsSidebarOpen(true)} />
             </div>
 
             <div className="flex flex-1">
-                <div className="w-64">
+                <div className="h-full bg-custom-green w-64">
                     <CustomerSidebar />
                 </div>
 

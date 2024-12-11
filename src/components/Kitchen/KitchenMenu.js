@@ -42,7 +42,7 @@ const KitchenMenu = () => {
         <React.Fragment>
             {kitchen ? (
                 <KitchenLayout>
-                    <div className="flex flex-col h-screen p-6">
+                    <div className="flex flex-col p-6">
                         <div className="flex justify-between items-center py-4">
                             <h1 className="text-2xl font-bold text-custom-green">Menu</h1>
                             {shimmerLoader ? (
