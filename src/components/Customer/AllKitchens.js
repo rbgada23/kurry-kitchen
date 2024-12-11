@@ -15,7 +15,7 @@ const AllKitchens = () => {
 
   return (
     <CustomerLayout>
-      <div className="h-screen overflow-scroll">
+      <div className="overflow-scroll">
         {/* <CustomerHeader cartCount={totalItemCount} openCartSidebar={() => setIsSidebarOpen(true)} /> */}
         <div className="mt-0 pl-4 md:pl-20">
           <KitchenList title={"All Kitchens"} kitchenList={kitchenList} />

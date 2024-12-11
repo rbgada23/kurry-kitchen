@@ -8,7 +8,7 @@ export default function CustomerSidebar() {
         { id: 1, name: "Kitchens", icon: <FaUtensils />, route: "/customer/kitchens" },
         { id: 2, name: "My Orders", icon: <FaShoppingBag />, route: "/customer/orders" },
         { id: 3, name: "Profile", icon: <FaTachometerAlt />, route: "/customer/profile" },
-    ];
+    ]; 
 
     return (
         <Sidebar menuItems={menuItems} />

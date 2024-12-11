@@ -18,7 +18,6 @@ const KitchenDetails = () => {
   const cartItemsCount = useSelector((state) => state.customer?.cartItems);
   const totalItemCount = cartItemsCount[id]?.length || 0;
   const kitchenName = state?.kitchenName;
-  console.log("sdsds", kitchenName);
 
   useEffect(() => {
     const fetchKitchenDetails = async () => {
