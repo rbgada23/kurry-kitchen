@@ -12,6 +12,7 @@ import KitchenOrders from "./Kitchen/KitchenOrders";
 import KitchenDashboard from "./Kitchen/KitchenDashboard";
 import CustomerOrder from "./Customer/CustomerOrder";
 import CustomerProfile from "./Customer/CustomerProfile";
+import KitchenUserProfile from "./Kitchen/KitchenUserProfile";
 
 const ProtectedRoute = ({ children }) => {
   const user = localStorage.getItem('user');
@@ -90,6 +91,14 @@ const Body = () => {
       element: (
         <ProtectedRoute>
           <KitchenDetails />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/kitchen/profile",
+      element: (
+        <ProtectedRoute>
+          <KitchenUserProfile />
         </ProtectedRoute>
       ),
     },

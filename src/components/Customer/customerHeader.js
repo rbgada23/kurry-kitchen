@@ -33,12 +33,12 @@ export default function CustomerHeader({ cartCount, isKitchenDetailsPage, openCa
             </div>
 
             <div className='ml-auto flex'>
-                <div onClick={openCartSidebar} className="flex cursor-pointer bg-slate-200 p-2 rounded text-custom-green mr-2">
+                <div onClick={openCartSidebar} className="flex cursor-pointer bg-slate-200 p-2 rounded-lg text-custom-green mr-2">
                     <FaCartPlus size={30} />
                     {cartCount > 0 && <span className='ml-2'>{cartCount}</span>}
                 </div>
                 <div>
-                    <button onClick={() => handleLogOut()} className="flex items-center button-override text-xl ml-5 bg-slate-200 text-custom-green rounded p-2 mr-8">
+                    <button onClick={() => handleLogOut()} className="flex items-center button-override text-xl ml-5 bg-slate-200 text-custom-green rounded-lg p-2 mr-8">
                         Logout
                         <MdLogout size={20} className="ml-2" color='custom-green' />
                     </button>

@@ -48,7 +48,7 @@ const CartSidebar = ({ kitchenId, isOpen, onClose, isCommonSidebar }) => {
                                     />
                                     <div className="flex-grow ml-4">
                                         <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                                        <p className="text-gray-600">Price: ${item.price.toFixed(2) * item.quantity}</p>
+                                        <p className="text-gray-600">Price: ${item.price?.toFixed(2) * item.quantity}</p>
                                         <p className="text-gray-600">Quantity: {item.quantity}</p>
                                     </div>
                                     <button onClick={() => handleRemove(item.id)} className="text-red-600 hover:text-red-800">
@@ -91,7 +91,7 @@ const CartSidebar = ({ kitchenId, isOpen, onClose, isCommonSidebar }) => {
                                                         />
                                                         <div key={item.id} className="mb-2 ml-4">
                                                             <h4 className="text-gray-800">{item.name}</h4>
-                                                            <p className="text-gray-600">Price: ${item.price.toFixed(2)}</p>
+                                                            <p className="text-gray-600">Price: ${item.price?.toFixed(2)}</p>
                                                             <p className="text-gray-600">Quantity: {item.quantity}</p>
                                                         </div>
                                                     </div>

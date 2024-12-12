@@ -12,7 +12,6 @@ const KitchenDetails = () => {
   const { state } = useLocation();
   const { id } = useParams();
   const [kitchen, setKitchen] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const cartItemsCount = useSelector((state) => state.customer?.cartItems);
@@ -28,20 +27,15 @@ const KitchenDetails = () => {
             withCredentials: true,
           }
         );
-        setKitchen(response.data.data);
+        setKitchen(response?.data?.data);
       } catch (error) {
         setError("Failed to fetch kitchen details");
       } finally {
-        setLoading(false);
       }
     };
 
     fetchKitchenDetails();
   }, [id]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   if (error) {
     return <div>{error}</div>;
@@ -63,7 +57,7 @@ const KitchenDetails = () => {
         )}
         <div className="p-6 ml-10 gap-4 flex flex-wrap w-full overflow-y-auto" style={{ maxHeight: "calc(100vh - 150px)" }}>
 
-          {kitchen.map((menuItem) => (
+          {kitchen && kitchen.length && kitchen.map((menuItem) => (
             <MenuCard
               kitchenName={kitchenName}
               kitchenId={id}

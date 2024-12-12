@@ -23,7 +23,7 @@ const useKitchenMenuList = () => {
       const menuData = response.data.data.map((menu) => {
         const base64Image = menu.image
           ? `data:image/jpeg;base64,${btoa(
-              String.fromCharCode(...new Uint8Array(menu.image.data.data))
+              String.fromCharCode(...new Uint8Array(menu.image.data))
             )}`
           : null;
         return {
