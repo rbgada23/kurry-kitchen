@@ -33,6 +33,9 @@ export default function CustomerHeader({ cartCount, isKitchenDetailsPage, openCa
             </div>
 
             <div className='ml-auto flex'>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                    Customer View
+                </span>
                 <div onClick={openCartSidebar} className="flex cursor-pointer bg-slate-200 p-2 rounded-lg text-custom-green mr-2">
                     <FaCartPlus size={30} />
                     {cartCount > 0 && <span className='ml-2'>{cartCount}</span>}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CustomerLayout from "./CustomerLayout";
 import axios from "axios";
+import { ShimmerDiv, ShimmerTitle } from "shimmer-effects-react";
 
 export default function CustomerProfile() {
   const [profile, setProfile] = useState({
@@ -9,8 +10,9 @@ export default function CustomerProfile() {
     emailId: "",
     address: "",
     zipcode: "",
-    contactNumber: ""
+    contactNumber: "",
   });
+  const [shimmerLoading, setShimmerLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -19,13 +21,19 @@ export default function CustomerProfile() {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setShimmerLoading(false);
+    }, 300);
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
   const getUserProfile = async () => {
-    const userEmail = JSON.parse(localStorage.getItem('user'));
+    const userEmail = JSON.parse(localStorage.getItem("user"));
     try {
       const response = await axios.get(
         `http://localhost:3001/userProfile?emailId=${userEmail.email}`,
@@ -38,8 +46,26 @@ export default function CustomerProfile() {
     } catch (err) {
       console.log(err.message);
     }
+  };
 
-  }
+  const saveUserProfile = async () => {
+    const userEmail = JSON.parse(localStorage.getItem("user"));
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/updateProfile?userId=${userEmail.userId}`,
+        profile,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response?.data?.message) {
+        console.log("Profile updated successfully");
+        // You can add success message display here or redirect
+      }
+    } catch (err) {
+      console.log("Error updating profile:", err.message);
+    }
+  };
 
   return (
     <CustomerLayout>
@@ -47,90 +73,85 @@ export default function CustomerProfile() {
         <h1 className="text-2xl font-bold text-custom-green mb-6">Edit Profile</h1>
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                First Name
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                value={profile.firstName}
-                onChange={handleInputChange}
-                placeholder="Enter your first name"
-                className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Last Name
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                value={profile.lastName}
-                onChange={handleInputChange}
-                placeholder="Enter your last name"
-                className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Email Address
-              </label>
-              <input
-                readOnly
-                type="text"
-                name="emailId"
-                value={profile.emailId}
-                placeholder="Enter your emailId"
-                className="w-full px-4 py-2 border border-gray-300 text-gray-500 bg-gray-200 rounded-lg focus:outline-none cursor-not-allowed"
-              />
-            </div>
+            {shimmerLoading ? <ShimmerTitle mode="light" line={1} width={80} /> :
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">
+                  First Name
+                </label>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Address
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={profile.address}
-                onChange={handleInputChange}
-                placeholder="Enter your address"
-                className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                contactNumber
-              </label>
-              <input
-                readOnly
-                type="number"
-                name="contactNumber"
-                value={profile.contactNumber}
-                onChange={handleInputChange}
-                placeholder="Enter your contact number"
-                className="w-full px-4 py-2 border border-gray-300 bg-gray-200 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-not-allowed"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Zipcode
-              </label>
-              <input
-                type="text"
-                name="zipcode"
-                value={profile.zipcode}
-                onChange={handleInputChange}
-                placeholder="Enter your zipcode"
-                className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
-              />
-            </div>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={profile.firstName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your first name"
+                  className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
+                />
+              </div>}
+            {shimmerLoading ? <ShimmerTitle mode="light" line={1} width={80} /> :
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">
+                  Last Name
+                </label>
+
+                <input
+                  type="text"
+                  name="lastName"
+                  value={profile.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your last name"
+                  className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
+                />
+              </div>}
+            {shimmerLoading ? <ShimmerTitle mode="light" line={1} width={80} /> :
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">
+                  Email Address
+                </label>
+
+                <input
+                  readOnly
+                  type="text"
+                  name="emailId"
+                  value={profile.emailId}
+                  placeholder="Enter your emailId"
+                  className="w-full px-4 py-2 border border-gray-300 text-gray-500 bg-gray-200 rounded-lg focus:outline-none cursor-not-allowed"
+                />
+              </div>}
+            {shimmerLoading ? <ShimmerTitle mode="light" line={1} width={80} /> :
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  value={profile.address}
+                  onChange={handleInputChange}
+                  placeholder="Enter your address"
+                  className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
+                />
+              </div>}
+            {shimmerLoading ? <ShimmerTitle mode="light" line={1} width={80} /> :
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">
+                  Contact Number
+                </label>
+
+                <input
+                  readOnly
+                  type="number"
+                  name="contactNumber"
+                  value={profile.contactNumber}
+                  onChange={handleInputChange}
+                  placeholder="Enter your contact number"
+                  className="w-full px-4 py-2 border border-gray-300 text-gray-500 bg-gray-200 rounded-lg focus:outline-none cursor-not-allowed"
+                />
+              </div>}
           </div>
           <div className="mt-6 flex">
             <button
-              onClick={() => console.log("Profile Saved", profile)}
+              onClick={saveUserProfile} // Call the saveUserProfile function
               className="bg-custom-green text-white py-2 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               Save Profile
@@ -138,7 +159,6 @@ export default function CustomerProfile() {
           </div>
         </div>
       </div>
-
     </CustomerLayout>
   );
 }
