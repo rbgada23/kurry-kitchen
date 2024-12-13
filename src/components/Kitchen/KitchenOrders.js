@@ -39,7 +39,7 @@ const KitchenOrdersPage = () => {
       setIsOrdersFetching(true);
       const timeout = new Promise((resolve) => setTimeout(resolve, 500));
       const [response] = await Promise.all([
-        axios.get(`${SERVER_URL}/order?kitchenId=${kitchen?._id}`, {
+        axios.get(`${SERVER_URL}/order/kitchen?kitchenId=${kitchen._id}`, {
           withCredentials: true,
         }),
         timeout,
