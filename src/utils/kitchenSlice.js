@@ -15,12 +15,12 @@ const kitchenSlice = createSlice({
       state.kitchenObj = action.payload;
     },
     addKitchenMenu: (state, action) => {
-      action?.payload?.forEach(x=>{
+      action?.payload?.forEach(x => {
         let index = current(state).kitchenMenuList?.findIndex((item) => item.name === x.name);
-        if (index == -1 )
-        state.kitchenMenuList.push(x)
+        if (index == -1)
+          state.kitchenMenuList.push(x)
       })
-      
+
     }
   },
 });

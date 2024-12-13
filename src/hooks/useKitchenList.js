@@ -14,8 +14,19 @@ const useKitchenList = () => {
       const response = await axios.get("http://localhost:3001/kitchen/all", {
         withCredentials: true
       });
+      const kitchenData = response.data.data.map((menu) => {
+        const base64Image = menu.image
+          ? `data:image/jpeg;base64,${btoa(
+            String.fromCharCode(...new Uint8Array(menu.image.data.data))
+          )}`
+          : null;
+        return {
+          ...menu,
+          image: base64Image,
+        };
+      });
       if (response && response?.data?.data?.length) {
-        dispatch(addKitchenList(response.data.data));
+        dispatch(addKitchenList(kitchenData));
       }
 
     } catch (error) {

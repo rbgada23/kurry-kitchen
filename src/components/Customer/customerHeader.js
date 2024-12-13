@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { removeUser } from "../../utils/userSlice";
 
 export default function CustomerHeader({ cartCount, isKitchenDetailsPage, openCartSidebar }) {
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleLogOut = () => {
         localStorage.clear();
@@ -38,7 +38,8 @@ export default function CustomerHeader({ cartCount, isKitchenDetailsPage, openCa
                     {cartCount > 0 && <span className='ml-2'>{cartCount}</span>}
                 </div>
                 <div>
-                    <button onClick={() => handleLogOut()} className="flex items-center button-override text-xl ml-5 bg-slate-200 text-custom-green rounded-lg p-2 mr-8">
+                    <button onClick={() => handleLogOut()}
+                        className="flex hover:bg-[#ea9e21] hover:text-white hover:shadow-2xl items-center button-override text-xl ml-5 bg-[#ce7b00] text-white rounded-lg p-2 mr-8">
                         Logout
                         <MdLogout size={20} className="ml-2" color='custom-green' />
                     </button>

@@ -1,24 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CustomerLayout from "./CustomerLayout";
-
-const orders = [
-    {
-        date: "2024-11-15",
-        menu: "Spaghetti Bolognese",
-        quantity: 2,
-        price: 12.99,
-        kitchenName: "Italiano Kitchen",
-    },
-    {
-        date: "2024-11-10",
-        menu: "Chicken Curry",
-        quantity: 1,
-        price: 10.49,
-        kitchenName: "Spicy Delights",
-    },
-];
+import axios from "axios";
 
 export default function CustomerOrder() {
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/order/user/history?userId=67461bbc6c2ac94cdcc10ffa",
+                    {
+                        withCredentials: true,
+                    }
+                );
+
+                const transformedOrders = response.data.data.map((order) => ({
+                    date: new Date(order.orderDate).toLocaleDateString(),
+                    menu: Array.isArray(order.items)
+                        ? order.items.map((item) => item.menuItemObj?.name || "Unknown").join(", ")
+                        : order.items,
+                    quantity: Array.isArray(order.items)
+                        ? order.items.reduce((sum, item) => sum + item.quantity, 0)
+                        : 1,
+                    price: parseFloat(order.totalAmount.$numberDecimal || "0"),
+                    kitchenName: "Kitchen Placeholder", // Replace with actual kitchen name if available
+                }));
+
+                setOrders(transformedOrders);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, []);
+
     return (
         <CustomerLayout>
             <div className="container mx-auto p-6">
@@ -27,7 +48,19 @@ export default function CustomerOrder() {
                 </h1>
                 <div className="overflow-x-auto">
                     <div className="overflow-y-auto h-[85vh]">
-                        {orders && orders.length ? (
+                        {loading ? (
+                            <div className="flex items-center justify-center h-full">
+                                <h2 className="text-xl font-bold text-gray-700 mb-4">
+                                    Loading...
+                                </h2>
+                            </div>
+                        ) : error ? (
+                            <div className="flex items-center justify-center h-full">
+                                <h2 className="text-xl font-bold text-red-500 mb-4">
+                                    {error}
+                                </h2>
+                            </div>
+                        ) : orders.length ? (
                             <table className="min-w-full bg-white shadow-md rounded-lg">
                                 <thead className="bg-gray-200 sticky top-0 z-10">
                                     <tr className="text-left text-gray-700">

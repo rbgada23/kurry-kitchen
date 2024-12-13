@@ -22,6 +22,7 @@ const KitchenList = ({ title, kitchenList }) => {
               kitchenName={kitchen.name}
               postarPath={kitchen.postarPath}
               description={kitchen.address}
+              image={kitchen.image}
             />
           ))}{" "}
         </div>
