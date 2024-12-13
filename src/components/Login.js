@@ -15,7 +15,7 @@ const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [user, setUser] = useState(null);
-  const [userType, setUserType] = useState(1);
+  const [userType, setUserType] = useState("kitchen");
 
   // const isSellerForm = useSelector((store) => store.form.isSellerForm);
   const dispatch = useDispatch();
@@ -123,8 +123,8 @@ const Login = () => {
           value={userType}
           onChange={(e) => setUserType(e.target.value)}
         >
-          <option value={1}>Seller</option>
-          <option value={2}>Customer</option>
+          <option value={"kitchen"}>Seller</option>
+          <option value={"customer"}>Customer</option>
         </select>
 
         {!isSignInForm && (
