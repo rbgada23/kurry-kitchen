@@ -9,8 +9,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   const [type, setType] = useState(isEdit ? menuData.type : "Vegeterian");
   const [price, setPrice] = useState(isEdit ? menuData.price : "");
   const [items, setItems] = useState(isEdit ? menuData.items : "");
-  const [imagePreview, setImagePreview] = useState(null);
-  const [fileName, setFileName] = useState(null);
+  const [fileName, setFileName] = useState("");
   const dispatch = useDispatch();
   const kitchen = useSelector((store) => store.kitchen.kitchenObj);
 
@@ -22,28 +21,14 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   const handleImageChange = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const file = event.target.files[0];
+
+    const file = event.target.files[0]; // Get the first selected file
     if (file) {
-      setFileName(file.name);
+      setFileName(file.name); // Set the file name in state
       console.log(file.name);
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
-    }
-  };
-
-  const handleDragOver = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
-  const handleDrop = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const file = event.dataTransfer.files[0];
-    if (file) {
-      setFileName(file.name);
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+      document.getElementById("file-input").value = null;
+    } else {
+      setFileName(""); // Ensure the file name is cleared if no file is selected
     }
   };
 
@@ -52,8 +37,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
     setType("Vegeterian");
     setPrice("")
     setItems("");
-    setFileName(null);
-    setImagePreview(null);
+    setFileName("");
   }
 
   const handleSubmit = async (e) => {
@@ -93,7 +77,6 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   }
 
   const postMenu = async () => {
-
     const formData = new FormData();
     formData.append("name", name);
     formData.append("type", type);
@@ -112,7 +95,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
       items,
       price,
       kitchen: kitchen._id,
-      image : document.getElementById("file-input").files[0]
+      image: document.getElementById("file-input").files[0]
     };
     try {
       const response = await axios.post(
@@ -177,7 +160,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
                 onChange={(e) => setItems(e.target.value)}
               ></textarea>
             </div>
-            <div className="image-upload-container">
+            {/* <div className="image-upload-container">
               <div
                 className="drop-zone"
                 onDragOver={handleDragOver}
@@ -201,16 +184,33 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
                   style={{ display: 'none' }}
                   id="file-input"
                 />
-                <label htmlFor="file-input" style={{ color: '#007bff', cursor: 'pointer' }}>
-                  Choose an image
-                </label>
                 {fileName && (
                   <div className="file-name" style={{ marginTop: '10px' }}>
                     <p>File Name: {fileName}</p>
                   </div>
                 )}
               </div>
+            </div> */}
+            <div className="image-upload-container" style={{ textAlign: 'center', padding: '20px' }}>
+              <input
+                type="file"
+                accept="image/*"
+                id="file-input"
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
+              />
+
+              {fileName && (
+                <div style={{ marginTop: '10px' }}>
+                  <p>File Name: {fileName}</p>
+                </div>
+              )}
+              <label htmlFor="file-input" style={{ cursor: 'pointer', padding: '10px 20px', background: '#007BFF', color: '#fff', borderRadius: '5px' }}>
+                upload Image
+              </label>
+
             </div>
+
             <div>
 
               <label className="block text-sm font-medium text-gray-700">

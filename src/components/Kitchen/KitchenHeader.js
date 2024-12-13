@@ -34,7 +34,9 @@ export default function KitchenHeader() {
 
             <div className='ml-auto flex'>
                 <div>
-                    <button onClick={() => handleLogOut()} className="flex hover:bg-slate-300 items-center button-override text-xl ml-5 bg-slate-200 text-custom-green rounded-lg p-2 mr-8">
+                    <button onClick={() => handleLogOut()} 
+                    className="flex hover:bg-[#ea9e21] hover:text-white hover:shadow-2xl items-center button-override text-xl ml-5 bg-[#ce7b00] text-white rounded-lg p-2 mr-8">
+                        
                         Logout
                         <MdLogout size={20} className="ml-2" color='custom-green' />
                     </button>

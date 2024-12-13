@@ -18,7 +18,9 @@ const KitchenOrdersPage = () => {
   const socket = io.connect("http://localhost:3001"); // Update the URL if needed
 
   useEffect(() => {
-    fetchOrders();
+    if (kitchen) {
+      fetchOrders();
+    }
   }, [kitchen]);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const KitchenOrdersPage = () => {
       setIsOrdersFetching(true);
       const timeout = new Promise((resolve) => setTimeout(resolve, 500));
       const [response] = await Promise.all([
-        axios.get(`${SERVER_URL}/order?kitchenId=${kitchen._id}`, {
+        axios.get(`${SERVER_URL}/order?kitchenId=${kitchen?._id}`, {
           withCredentials: true,
         }),
         timeout,
@@ -50,10 +52,10 @@ const KitchenOrdersPage = () => {
     }
   };
 
-  const handleAccept = async (order) => {
-    order.orderStatus = "accepted";
+  const handleOrderStatus = async (order, type) => {
+    order.orderStatus = type;
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         "http://localhost:3001/order?id=" + order._id,
         order,
         {
@@ -62,7 +64,8 @@ const KitchenOrdersPage = () => {
       );
 
       if (response.status === 200) {
-        toast.success("Order accepted successfully!");
+        toast.success(type === "accepted" ? "Order accepted successfully!" : "Order rejected successfully");
+        await fetchOrders()
       }
       console.log(response);
     } catch (error) {
@@ -71,37 +74,20 @@ const KitchenOrdersPage = () => {
     }
   };
 
-  const handleReject = async (order) => {
-    try {
-      const response = await axios.put(
-        `${SERVER_URL}/order/${order._id}/reject`,
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.status === 200) {
-        toast.success("Order rejected successfully!");
-      }
-    } catch (error) {
-      console.error("Error rejecting the order:", error);
-      toast.error("Failed to reject the order. Please try again.");
-    }
-  };
-
   return (
     <KitchenLayout>
       <div className="container mx-auto p-6">
-      {!isOrdersFetching ? <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-semibold text-custom-green">
+        {!isOrdersFetching ? <div className="flex mb-4">
+          <span data-tip="Refresh" className="tooltip hover:bg-sky-500 bg-custom-green p-1 rounded-lg">
+            <RefreshIcon
+              className="w-6 h-6 text-white cursor-pointer "
+              onClick={fetchOrders}
+            />
+          </span>
+          <h1 className="text-2xl ml-3 font-semibold text-custom-green">
             Incoming Orders: {ordersIncoming.length}
           </h1>
-          <RefreshIcon
-            className="w-6 h-6 text-gray-500 cursor-pointer hover:text-gray-700"
-            onClick={fetchOrders} // Trigger refresh action
-          />
+
         </div> : <></>}
         {isOrdersFetching ? (
           <ShimmerTable
@@ -123,13 +109,12 @@ const KitchenOrdersPage = () => {
                   <thead className="bg-gray-200 sticky top-0 z-10">
                     <tr className="text-left text-gray-700">
                       <th className="p-4 font-semibold">Action</th>
-                      <th className="p-4 font-semibold">User</th>
-                      <th className="p-4 font-semibold">Items</th>
+                      <th className="p-4 font-semibold">Customer Name</th>
+                      <th className="p-4 font-semibold">Meal Type</th>
                       <th className="p-4 font-semibold">Quantity</th>
 
                       <th className="p-4 font-semibold">Total Amount</th>
                       <th className="p-4 font-semibold">Delivery Address</th>
-                      <th className="p-4 font-semibold">Order Status</th>
                       <th className="p-4 font-semibold">Platform</th>
                     </tr>
                   </thead>
@@ -141,18 +126,27 @@ const KitchenOrdersPage = () => {
                       >
                         <td className="p-4 whitespace-nowrap">
                           <div className="flex space-x-2">
-                            <button
-                              className="p-2 bg-green-500 rounded hover:bg-green-600 text-white"
-                              onClick={() => handleAccept(order)}
-                            >
-                              <CheckIcon className="h-5 w-5" />
-                            </button>
-                            <button
-                              className="p-2 bg-red-500 rounded hover:bg-red-600 text-white"
-                              onClick={() => handleReject(order)}
-                            >
-                              <XIcon className="h-5 w-5" />
-                            </button>
+                            {order.orderStatus === 'accepted' ? <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                              Accepted
+                            </span> : order.orderStatus === 'rejected' ? <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                              Rejected
+                            </span> : <span>
+                              <button
+                                data-tip="Accept"
+                                className="tooltip ml-3 mr-2 p-1 bg-green-500 rounded hover:bg-green-600 text-white"
+                                onClick={() => handleOrderStatus(order, "accepted")}
+                              >
+                                <CheckIcon className="h-5 w-5" />
+                              </button>
+                              <button
+                                data-tip="Reject"
+                                className="tooltip p-1 bg-red-500 rounded hover:bg-red-600 text-white"
+                                onClick={() => handleOrderStatus(order, "rejected")}
+                              >
+                                <XIcon className="h-5 w-5" />
+                              </button></span>}
+
+
                           </div>
                         </td>
                         <td className="p-4 whitespace-nowrap">
@@ -196,9 +190,6 @@ const KitchenOrdersPage = () => {
                         </td>
                         <td className="p-4 whitespace-nowrap">
                           {order.deliveryAddress}
-                        </td>
-                        <td className="p-4 whitespace-nowrap capitalize">
-                          {order.orderStatus}
                         </td>
                         <td className="p-4 whitespace-nowrap capitalize">
                           {order.platform}

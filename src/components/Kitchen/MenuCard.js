@@ -6,7 +6,7 @@ import MenuForm from "./MenuForm";
 import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
 
-const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId, kitchenName,image }) => {
+const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId, kitchenName, image }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.customer?.cartItems);
   const cartItem = cartItems?.[kitchenId]?.find((item) => item.id === _id);
@@ -56,7 +56,6 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
                 <FaEdit className="text-2xl text-custom-green cursor-pointer hover:text-gray-700" onClick={openModal} />
                 <MdDelete className="text-2xl text-rose-700 cursor-pointer hover:text-rose-800" onClick={openDeleteModal} />
               </div>
-
             )}
           </div>
 

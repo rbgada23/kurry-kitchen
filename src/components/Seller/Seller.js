@@ -6,7 +6,6 @@ import KitchenLayout from "../Kitchen/KitchenLayout";
 import KitchenMenu from "../Kitchen/KitchenMenu";
 
 const Seller = () => {
-  // useKitchen();
 
   const kitchen = useSelector((store) => store.kitchen.kitchenObj);
 
