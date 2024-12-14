@@ -56,8 +56,8 @@ const KitchenOrdersPage = () => {
     order.orderStatus = type;
     try {
       const response = await axios.put(
-        "http://localhost:3001/order?id=" + order._id,
-        order,
+        "http://localhost:3001/order/orderStatus?id=" + order._id+"&orderStatus="+order.orderStatus,
+        null,
         {
           withCredentials: true,
         }
