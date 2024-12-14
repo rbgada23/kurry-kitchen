@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-export default function Sidebar({ menuItems }) {
+export default function Sidebar({ menuItems, isSidebarOpenClicked, isFromCustomerPage }) {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -13,13 +13,18 @@ export default function Sidebar({ menuItems }) {
                     return (
                         <li
                             key={item.id}
-                            className={`flex items-center p-4 mb-4 text-xl font-semibold cursor-pointer rounded-lg 
+                            className={` ${isFromCustomerPage && !isSidebarOpenClicked && 'w-1/4'} flex items-center p-4 mb-4 text-xl font-semibold cursor-pointer rounded-lg 
                             ${isActive ? "bg-white text-custom-green" : "hover:bg-white hover:text-custom-green"} 
                             transition-all duration-300`}
                             onClick={() => navigate(item.route)}
                         >
                             {item.icon}
-                            <span className="ml-4">{item.name}</span>
+                            {isFromCustomerPage ? (
+                                isSidebarOpenClicked && <span className="ml-4">{item.name}</span>
+                            ) : (
+                                <span className="ml-4">{item.name}</span>
+                            )}
+
                         </li>
                     );
                 })}

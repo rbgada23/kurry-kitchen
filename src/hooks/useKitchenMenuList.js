@@ -20,32 +20,28 @@ const useKitchenMenuList = () => {
           },
         }
       );
+      
       const menuData = response.data.data.map((menu) => {
-        const base64Image = menu.image
-          ? `data:image/jpeg;base64,${btoa(
-              String.fromCharCode(...new Uint8Array(menu.image.data.data))
-            )}`
-          : null;
+        // Ensure image data exists and is of type buffer or array
+        let base64Image = null;
+        if (menu.image && menu.image.data && Array.isArray(menu.image.data)) {
+          base64Image = `data:image/jpeg;base64,${btoa(
+            String.fromCharCode(...new Uint8Array(menu.image.data))
+          )}`;
+        }
+        
         return {
           ...menu,
           image: base64Image,
         };
       });
 
-      //   const menuData = response.data.data.map((menu) => {
-      //     if (menu.image && menu.image.data) {
-      //         const base64Image = `data:image/jpeg;base64,${btoa(
-      //             String.fromCharCode(...new Uint8Array(menu.image.data))
-      //         )}`;
-      //         return { ...menu, image: base64Image };
-      //     }
-      //     return menu; // No image data
-      // });
       dispatch(addKitchenMenu(menuData));
     } catch (error) {
       console.error("Failed to fetch kitchen menu list:", error);
     }
-  };
+};
+
 
   useEffect(() => {
     if (!kitchenMenuList.length && kitchen?._id) {

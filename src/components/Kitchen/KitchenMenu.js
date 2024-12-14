@@ -79,10 +79,15 @@ const KitchenMenu = () => {
                         ) : (
                             <div className="flex flex-wrap gap-6 w-full overflow-y-auto">
                                 {shimmerLoader ? (
-                                    <React.Fragment>
-                                        <ShimmerDiv mode="light" height={300} width={350} className="mr-5" />
-                                        <ShimmerDiv mode="light" height={300} width={350} className="mr-5" />
-                                        <ShimmerDiv mode="light" height={300} width={350} className="mr-5" />
+                                    <React.Fragment>{Array.from({ length: kitchenMenuList?.length || 3 }).map((_, index) => (
+                                        <ShimmerDiv
+                                            key={index}
+                                            mode="light"
+                                            height={300}
+                                            width={350}
+                                            className="mr-5"
+                                        />
+                                    ))}
                                     </React.Fragment>
                                 ) : (
                                     <React.Fragment>

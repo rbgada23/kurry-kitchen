@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CustomerLayout from "./CustomerLayout";
 import axios from "axios";
-import { ShimmerDiv, ShimmerTitle } from "shimmer-effects-react";
+import { ShimmerButton, ShimmerTitle } from "shimmer-effects-react";
 
 export default function CustomerProfile() {
   const [profile, setProfile] = useState({
@@ -150,12 +150,13 @@ export default function CustomerProfile() {
               </div>}
           </div>
           <div className="mt-6 flex">
-            <button
-              onClick={saveUserProfile} // Call the saveUserProfile function
-              className="bg-custom-green text-white py-2 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              Save Profile
-            </button>
+            {shimmerLoading ? <ShimmerButton mode="light" line={1} width={80} /> :
+              <button
+                onClick={saveUserProfile} // Call the saveUserProfile function
+                className="bg-custom-green text-white py-2 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                Save Profile
+              </button>}
           </div>
         </div>
       </div>

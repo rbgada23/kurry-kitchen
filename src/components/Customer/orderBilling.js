@@ -124,7 +124,7 @@ const OrderBilling = () => {
                                     onChange={(e) => setDeliveryAddress(e.target.value)}
                                     placeholder="Enter your address"
                                     className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
-                                /> : (<p>{deliveryAddress}</p>)}
+                                /> : (<p className='text-black'>{deliveryAddress}</p>)}
                             </div>
                             <button
                                 onClick={() => handleSaveOrEditAdd()}
@@ -136,14 +136,12 @@ const OrderBilling = () => {
                     </div>
 
                     <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-1/2">
-                        <h2 className="text-xl text-custom-green font-semibold mb-4">Your Cart</h2>
+                        <h2 className="text-xl text-custom-green font-semibold mb-4">Order Summary</h2>
                         {cartItemLists && cartItemLists.length ? <ul className="divide-y p-2 divide-gray-200">
                             {cartItemLists.map((item, key) => (
                                 <li key={key} className="flex shadow-md justify-between items-center p-4">
                                     <img
-                                        src={
-                                            "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_100/RX_THUMBNAIL/IMAGES/VENDOR/2024/9/17/ca7cc541-4ba2-48c2-8de6-f09ed033b945_62876.jpg"
-                                        }
+                                        src={item.image || "https://lh3.googleusercontent.com/proxy/HtfKFkdagZAMcDYISnQFW_KRwGig586P-ZcBqED8Mo38kf8ONen9NOQMp2is03ezbqq6J8LF6Fm4S8CUi3tQlJDirH0bzUuxkMDVvA1FFrfwKjBma1PC"}
                                         alt={item.name}
                                         className="w-16 h-16 object-cover rounded-lg"
                                     />
@@ -163,7 +161,7 @@ const OrderBilling = () => {
 
                     <div className="bg-white shadow-md rounded-lg p-6 w-1/2">
                         <h2 className="text-xl text-custom-green font-semibold mb-4">Total Price</h2>
-                        <p className="text-lg font-bold">${totalAmount}</p>
+                        <p className="text-lg font-bold text-black">${totalAmount}</p>
                     </div>
                     <button
                         onClick={placeOrder}

@@ -15,7 +15,7 @@ const KitchenOrdersPage = () => {
   const [ordersIncoming, setIncomingOrders] = useState([]);
   const [isOrdersFetching, setIsOrdersFetching] = useState(true);
   const kitchen = useSelector((store) => store.kitchen.kitchenObj);
-  const socket = io.connect("http://localhost:3001"); // Update the URL if needed
+  const socket = io.connect("http://localhost:3001");
 
   useEffect(() => {
     if (kitchen) {
@@ -25,7 +25,6 @@ const KitchenOrdersPage = () => {
 
   useEffect(() => {
     const handleNewOrder = (order) => {
-      console.log(order);
       setIncomingOrders((prevOrders) => [...prevOrders, order]); // Append the new order to the array
     };
 
@@ -58,41 +57,50 @@ const KitchenOrdersPage = () => {
       const response = await axios.put(
         "http://localhost:3001/order?id=" + order._id,
         order,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       if (response.status === 200) {
         toast.success(type === "accepted" ? "Order accepted successfully!" : "Order rejected successfully");
-        await fetchOrders()
+
+        // Update the status in the local state without fetching the whole list again
+        setOrders((prevOrders) =>
+          prevOrders.map((item) =>
+            item._id === order._id ? { ...item, orderStatus: type } : item
+          )
+        );
       }
-      console.log(response);
     } catch (error) {
-      toast.error("Failed to accept the order. Please try again.");
-      console.error("Error accepting the order:", error);
+      toast.error("Failed to accept or reject the order. Please try again.");
+      console.error("Error accepting/rejecting the order:", error);
     }
   };
+
+
+  const shimmerRowCount = isOrdersFetching ? 10 : orders.length;
 
   return (
     <KitchenLayout>
       <div className="container mx-auto p-6">
-        {!isOrdersFetching ? <div className="flex mb-4">
-          <span data-tip="Refresh" className="tooltip hover:bg-sky-500 bg-custom-green p-1 rounded-lg">
-            <RefreshIcon
-              className="w-6 h-6 text-white cursor-pointer "
-              onClick={fetchOrders}
-            />
-          </span>
-          <h1 className="text-2xl ml-3 font-semibold text-custom-green">
-            Incoming Orders: {ordersIncoming.length}
-          </h1>
-
-        </div> : <></>}
+        {!isOrdersFetching ? (
+          <div className="flex mb-4">
+            <span data-tip="Refresh" className="tooltip hover:bg-sky-500 bg-custom-green p-1 rounded-lg">
+              <RefreshIcon
+                className="w-6 h-6 text-white cursor-pointer "
+                onClick={fetchOrders}
+              />
+            </span>
+            <h1 className="text-2xl ml-3 font-semibold text-custom-green">
+              Incoming Orders: {ordersIncoming.length}
+            </h1>
+          </div>
+        ) : (
+          <></>
+        )}
         {isOrdersFetching ? (
           <ShimmerTable
             mode="light"
-            row={15}
+            row={shimmerRowCount}
             col={5}
             height={15}
             border={0}
@@ -112,7 +120,6 @@ const KitchenOrdersPage = () => {
                       <th className="p-4 font-semibold">Customer Name</th>
                       <th className="p-4 font-semibold">Meal Type</th>
                       <th className="p-4 font-semibold">Quantity</th>
-
                       <th className="p-4 font-semibold">Total Amount</th>
                       <th className="p-4 font-semibold">Delivery Address</th>
                       <th className="p-4 font-semibold">Platform</th>
@@ -126,65 +133,57 @@ const KitchenOrdersPage = () => {
                       >
                         <td className="p-4 whitespace-nowrap">
                           <div className="flex space-x-2">
-                            {order.orderStatus === 'accepted' ? <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                              Accepted
-                            </span> : order.orderStatus === 'rejected' ? <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                              Rejected
-                            </span> : <span>
-                              <button
-                                data-tip="Accept"
-                                className="tooltip ml-3 mr-2 p-1 bg-green-500 rounded hover:bg-green-600 text-white"
-                                onClick={() => handleOrderStatus(order, "accepted")}
-                              >
-                                <CheckIcon className="h-5 w-5" />
-                              </button>
-                              <button
-                                data-tip="Reject"
-                                className="tooltip p-1 bg-red-500 rounded hover:bg-red-600 text-white"
-                                onClick={() => handleOrderStatus(order, "rejected")}
-                              >
-                                <XIcon className="h-5 w-5" />
-                              </button></span>}
-
-
+                            {order.orderStatus === "accepted" ? (
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                Accepted
+                              </span>
+                            ) : order.orderStatus === "rejected" ? (
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                                Rejected
+                              </span>
+                            ) : (
+                              <span>
+                                <button
+                                  data-tip="Accept"
+                                  className="tooltip ml-3 mr-2 p-1 bg-green-500 rounded hover:bg-green-600 text-white"
+                                  onClick={() => handleOrderStatus(order, "accepted")}
+                                >
+                                  <CheckIcon className="h-5 w-5" />
+                                </button>
+                                <button
+                                  data-tip="Reject"
+                                  className="tooltip p-1 bg-red-500 rounded hover:bg-red-600 text-white"
+                                  onClick={() => handleOrderStatus(order, "rejected")}
+                                >
+                                  <XIcon className="h-5 w-5" />
+                                </button>
+                              </span>
+                            )}
                           </div>
                         </td>
                         <td className="p-4 whitespace-nowrap">
                           {order.userObj.firstName}
                         </td>
-                        {/* <td className="p-4 whitespace-nowrap">
-                                                {order.items.map((item, index) => (
-                                                    <div key={index}>
-                                                        {item?.menuItemObj?.name}
-                                                    </div>
-                                                ))}
-                                            </td> */}
                         <td className="p-4 whitespace-nowrap">
                           {Array.isArray(order.items) ? (
-                            // Handle structured items array (Use Case 1)
                             order.items.map((item, index) => (
                               <div key={index}>
-                                {item?.menuItemObj?.name || "Unnamed Item"}{" "}
-                                {/* Show menu item name or fallback */}
+                                {item?.menuItemObj?.name || "Unnamed Item"}
                               </div>
                             ))
                           ) : (
-                            // Handle plain text (Use Case 2)
                             <div>{order.items}</div>
                           )}
                         </td>
                         <td className="p-4 whitespace-nowrap">
                           {Array.isArray(order.items) ? (
-                            // Handle structured items array (Use Case 1)
                             order.items.map((item, index) => (
                               <div key={index}>{item?.quantity || "N/A"}</div>
                             ))
                           ) : (
-                            // Handle plain text (Use Case 2)
                             <div>N/A</div>
                           )}
                         </td>
-
                         <td className="p-4 whitespace-nowrap">
                           ${order.totalAmount.$numberDecimal}
                         </td>

@@ -19,12 +19,14 @@ const KitchenList = ({ title, kitchenList }) => {
   }, []);
 
   return (
-    <div className="mt-20">
+    <div className="">
       <FilterKitchen />
       <div className="h-5/6">
+        <h1 className="text-2xl font-semibold text-custom-green mb-4">
+        Find Your Favorite Kitchen Today!
+        </h1>
         <div className="flex flex-wrap gap-6 w-full overflow-y-auto">
           {shimmerLoader ? (
-            // Dynamically generate shimmer loaders based on kitchenList length
             kitchenList?.map((_, index) => (
               <ShimmerDiv
                 key={index}
@@ -35,7 +37,6 @@ const KitchenList = ({ title, kitchenList }) => {
               />
             ))
           ) : (
-            // Render KitchenCard components once shimmerLoader is false
             kitchenList?.map((kitchen) => (
               <KitchenCard
                 onClick={() => handleCardClick(kitchen._id, kitchen.name)}
