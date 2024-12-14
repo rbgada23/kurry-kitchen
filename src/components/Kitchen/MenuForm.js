@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addKitchenMenu } from "../../utils/kitchenSlice";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { MdFileUpload } from "react-icons/md";
 
 const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
@@ -17,7 +17,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   const handleCancel = () => {
     closeModal();
     resetFields();
-  }
+  };
 
   const handleImageChange = (event) => {
     event.preventDefault();
@@ -35,10 +35,10 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   const resetFields = () => {
     setName("");
     setType("Vegeterian");
-    setPrice("")
+    setPrice("");
     setItems("");
     setFileName("");
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,7 +74,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
     } catch (error) {
       console.error("API call failed:", error);
     }
-  }
+  };
 
   const postMenu = async () => {
     const menuObj = {
@@ -83,7 +83,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
       items,
       price,
       kitchen: kitchen._id,
-      image: document.getElementById("file-input").files[0]
+      image: document.getElementById("file-input").files[0],
     };
     try {
       const response = await axios.post(
@@ -95,8 +95,30 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
         }
       );
       if (response) {
-        dispatch(addKitchenMenu([response.data.data]));
-        toast.success("Menu added successfully")
+        const menu = response?.data?.data;
+
+        let base64Image = null;
+  
+        if (menu?.image?.data?.data) {
+          const byteArray = new Uint8Array(menu.image.data.data);
+          const blob = new Blob([byteArray], { type: "image/jpeg" });
+          const reader = new FileReader();
+  
+          base64Image = await new Promise((resolve) => {
+            reader.onloadend = () => {
+              resolve(reader.result);
+            };
+            reader.readAsDataURL(blob);
+          });
+        }
+  
+        const kitchenMenuData = {
+          ...menu,
+          image: base64Image,
+        };
+
+        dispatch(addKitchenMenu([kitchenMenuData]));
+        toast.success("Menu added successfully");
       }
     } catch (error) {
       console.error("API call failed:", error);
@@ -110,7 +132,9 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
         className={`modal ${isModalOpen ? "modal-open" : "hidden"}`}
       >
         <div className="modal-box bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">{isEdit ? "Update Menu" : "Add Menu"}</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            {isEdit ? "Update Menu" : "Add Menu"}
+          </h2>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -152,31 +176,35 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
               Menu Image
             </label>
             <div className="image-upload-container mb-2">
-
               <input
                 className="cursor-pointer"
                 type="file"
                 accept="image/*"
                 id="file-input"
                 onChange={handleImageChange}
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
               />
 
               {fileName && (
-                <div style={{ marginTop: '10px' }}>
+                <div style={{ marginTop: "10px" }}>
                   <p>File Name: {fileName}</p>
                 </div>
               )}
               <div className="flex">
                 <MdFileUpload className="mt-1 text-sky-600" size={20} />
-                <label htmlFor="file-input" className="ml-1 cursor-pointer text-sky-600">
+                <label
+                  htmlFor="file-input"
+                  className="ml-1 cursor-pointer text-sky-600"
+                >
                   upload Image
                 </label>
               </div>
-
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700" style={{ paddingTop: "8px" }}>
+              <label
+                className="block text-sm font-medium text-gray-700"
+                style={{ paddingTop: "8px" }}
+              >
                 Price ($)
               </label>
               <input

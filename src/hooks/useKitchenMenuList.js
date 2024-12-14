@@ -24,9 +24,9 @@ const useKitchenMenuList = () => {
       const menuData = response.data.data.map((menu) => {
         // Ensure image data exists and is of type buffer or array
         let base64Image = null;
-        if (menu.image && menu.image.data && Array.isArray(menu.image.data)) {
+        if (menu.image && menu.image.data && Array.isArray(menu.image.data.data)) {
           base64Image = `data:image/jpeg;base64,${btoa(
-            String.fromCharCode(...new Uint8Array(menu.image.data))
+            String.fromCharCode(...new Uint8Array(menu.image.data.data))
           )}`;
         }
         

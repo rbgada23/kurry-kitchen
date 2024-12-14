@@ -60,7 +60,7 @@ const CartSidebar = ({ kitchenId, isOpen, onClose, isFromKitchenDetails }) => {
                                     ))}
                                 </ul>
                                 <button
-                                    onClick={() => handleCheckoutPage(kitchenId)}
+                                    onClick={() => handleCheckoutPage(id)}
                                     className="w-full bg-custom-green text-white py-2 rounded-lg"
                                 >
                                     Go To Checkout
