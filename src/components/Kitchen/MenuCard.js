@@ -39,7 +39,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
       <div>
         <div className="relative">
           <img
-            src={image}
+            src={image || "https://lh3.googleusercontent.com/proxy/HtfKFkdagZAMcDYISnQFW_KRwGig586P-ZcBqED8Mo38kf8ONen9NOQMp2is03ezbqq6J8LF6Fm4S8CUi3tQlJDirH0bzUuxkMDVvA1FFrfwKjBma1PC"}
             alt={name}
             className="w-full h-48 object-cover"
           />
@@ -119,7 +119,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
                 {cartItem.quantity}
               </span>
               <button
-                onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, kitchenName: kitchenName, item: { id: _id, name, items, type, price } }))}
+                onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, kitchenName: kitchenName, item: { id: _id, name, items, type, price, image } }))}
                 className="px-3 py-1 bg-green-500 text-white rounded-r hover:bg-green-600"
               >
                 +
@@ -127,7 +127,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
             </div>
           ) : (
             <button
-              onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, kitchenName: kitchenName, item: { id: _id, name, items, type, price } }))}
+              onClick={() => dispatch(addItemToCart({ kitchenId: kitchenId, kitchenName: kitchenName, item: { id: _id, name, items, type, price, image } }))}
               className="w-full bg-custom-green text-white py-2 rounded-lg"
             >
               Add

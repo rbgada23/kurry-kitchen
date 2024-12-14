@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import CustomerLayout from "./CustomerLayout";
 import axios from "axios";
+import { ShimmerTable } from "shimmer-effects-react";
 
 export default function CustomerOrder() {
     const [orders, setOrders] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [shimmerLoading, setShimmerLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [shimmerRows, setShimmerRows] = useState(5); // Default rows for shimmer
+
+    useEffect(() => {
+        setTimeout(() => {
+            setShimmerLoading(false);
+        }, 300);
+    }, []);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -29,11 +37,12 @@ export default function CustomerOrder() {
                     kitchenName: "Kitchen Placeholder", // Replace with actual kitchen name if available
                 }));
 
+                // Dynamically set shimmer rows based on fetched data length
+                setShimmerRows(transformedOrders.length + 1 || 5); // Default to 5 rows if no data
+
                 setOrders(transformedOrders);
             } catch (err) {
                 setError(err.message);
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -44,15 +53,22 @@ export default function CustomerOrder() {
         <CustomerLayout>
             <div className="container mx-auto p-6">
                 <h1 className="text-2xl font-semibold text-custom-green mb-4">
-                    Customer Orders
+                    Your order history
                 </h1>
                 <div className="overflow-x-auto">
                     <div className="overflow-y-auto h-[85vh]">
-                        {loading ? (
-                            <div className="flex items-center justify-center h-full">
-                                <h2 className="text-xl font-bold text-gray-700 mb-4">
-                                    Loading...
-                                </h2>
+                        {shimmerLoading ? (
+                            <div>
+                                <ShimmerTable
+                                    mode="light"
+                                    row={shimmerRows}
+                                    col={5}
+                                    border={1}
+                                    borderColor={"#cbd5e1"}
+                                    rounded={0.25}
+                                    rowGap={16}
+                                    colPadding={[10, 5, 10, 5]}
+                                />
                             </div>
                         ) : error ? (
                             <div className="flex items-center justify-center h-full">
@@ -62,7 +78,7 @@ export default function CustomerOrder() {
                             </div>
                         ) : orders.length ? (
                             <table className="min-w-full bg-white shadow-md rounded-lg">
-                                <thead className="bg-gray-200 sticky top-0 z-10">
+                                <thead className="bg-gray-200 top-0 z-10">
                                     <tr className="text-left text-gray-700">
                                         <th className="p-4 font-semibold">Date</th>
                                         <th className="p-4 font-semibold">Menu</th>
@@ -81,7 +97,7 @@ export default function CustomerOrder() {
                                             <td className="p-4 whitespace-nowrap">{order.menu}</td>
                                             <td className="p-4 whitespace-nowrap">{order.quantity}</td>
                                             <td className="p-4 whitespace-nowrap">
-                                                ${order.price.toFixed(2)}
+                                                ${order.price?.toFixed(2)}
                                             </td>
                                             <td className="p-4 whitespace-nowrap">
                                                 {order.kitchenName}

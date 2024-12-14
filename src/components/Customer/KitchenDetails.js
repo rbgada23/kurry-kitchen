@@ -27,15 +27,48 @@ const KitchenDetails = () => {
             withCredentials: true,
           }
         );
-        setKitchen(response?.data?.data);
+
+        const kitchenDetailsData = response?.data?.data.map((menu) => {
+          let base64Image = null;
+          if (menu?.image?.data?.data) {
+            const byteArray = new Uint8Array(menu.image.data.data);
+            const blob = new Blob([byteArray], { type: "image/jpeg" });
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            base64Image = new Promise((resolve) => {
+              reader.onloadend = () => {
+                resolve(reader.result);
+              };
+            });
+          }
+
+          return {
+            ...menu,
+            image: base64Image,
+          };
+        });
+
+        // Wait for all images to resolve
+        const resolvedData = await Promise.all(
+          kitchenDetailsData.map(async (menu) => ({
+            ...menu,
+            image: await menu.image, // Wait for the image Promise
+          }))
+        );
+
+        if (resolvedData && resolvedData.length) {
+          console.log("kitchenDetailsData", resolvedData);
+          setKitchen(resolvedData);
+        }
       } catch (error) {
+        console.error("Failed to process kitchen details:", error);
         setError("Failed to fetch kitchen details");
-      } finally {
       }
     };
 
     fetchKitchenDetails();
   }, [id]);
+
 
   if (error) {
     return <div>{error}</div>;
@@ -73,6 +106,7 @@ const KitchenDetails = () => {
           ))}
         </div>
         <CartSidebar
+          isFromKitchenDetails={true}
           kitchenId={id}
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}

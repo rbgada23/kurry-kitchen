@@ -3,6 +3,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addKitchenMenu } from "../../utils/kitchenSlice";
 import { toast } from 'react-toastify';
+import { MdFileUpload } from "react-icons/md";
 
 const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   const [name, setName] = useState(isEdit ? menuData.name : "");
@@ -26,7 +27,6 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
     if (file) {
       setFileName(file.name); // Set the file name in state
       console.log(file.name);
-      document.getElementById("file-input").value = null;
     } else {
       setFileName(""); // Ensure the file name is cleared if no file is selected
     }
@@ -77,18 +77,6 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   }
 
   const postMenu = async () => {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("type", type);
-    formData.append("items", items);
-    formData.append("price", price);
-    formData.append("kitchen", kitchen._id);
-    if (fileName) {
-      const fileInput = document.getElementById("file-input").files[0];
-      formData.append("image", fileInput);
-    }
-
-
     const menuObj = {
       name,
       type,
@@ -160,39 +148,13 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
                 onChange={(e) => setItems(e.target.value)}
               ></textarea>
             </div>
-            {/* <div className="image-upload-container">
-              <div
-                className="drop-zone"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                style={{
-                  border: '2px dashed #ccc',
-                  padding: '20px',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                {imagePreview ? (
-                  <img src={imagePreview} alt="Image preview" style={{ maxWidth: '100%', maxHeight: '200px' }} />
-                ) : (
-                  <p>Drag & Drop an image here, or click to select</p>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                  id="file-input"
-                />
-                {fileName && (
-                  <div className="file-name" style={{ marginTop: '10px' }}>
-                    <p>File Name: {fileName}</p>
-                  </div>
-                )}
-              </div>
-            </div> */}
-            <div className="image-upload-container" style={{ textAlign: 'center', padding: '20px' }}>
+            <label className="block text-sm font-medium text-gray-700">
+              Menu Image
+            </label>
+            <div className="image-upload-container mb-2">
+
               <input
+                className="cursor-pointer"
                 type="file"
                 accept="image/*"
                 id="file-input"
@@ -205,15 +167,16 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
                   <p>File Name: {fileName}</p>
                 </div>
               )}
-              <label htmlFor="file-input" style={{ cursor: 'pointer', padding: '10px 20px', background: '#007BFF', color: '#fff', borderRadius: '5px' }}>
-                upload Image
-              </label>
+              <div className="flex">
+                <MdFileUpload className="mt-1 text-sky-600" size={20} />
+                <label htmlFor="file-input" className="ml-1 cursor-pointer text-sky-600">
+                  upload Image
+                </label>
+              </div>
 
             </div>
-
             <div>
-
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700" style={{ paddingTop: "8px" }}>
                 Price ($)
               </label>
               <input

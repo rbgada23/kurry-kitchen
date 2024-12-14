@@ -2,48 +2,50 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { clearCart } from '../../utils/customerSlice';
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 
 const OrderBilling = () => {
     const [userId, setUserId] = useState('');
+    const navigate = useNavigate();
     const [isOrderPlaced, setOrderPlaced] = useState(false);
     const { id } = useParams();
     const cartItems = useSelector((state) => state.customer.cartItems);
     const cartItemLists = cartItems[id] || [];
     const totalAmount = cartItemLists.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
     const dispatch = useDispatch();
+    const [deliveryAddress, setDeliveryAddress] = useState("");
+    const [isAddressEditable, setIsAddressEditable] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        getUserData();
+        getUserProfile();
     }, []);
 
-    const getUserData = () => {
+    const getUserProfile = async () => {
+        setLoading(true);
+        const userEmail = JSON.parse(localStorage.getItem('user'))?.email;
         try {
-            const user = localStorage.getItem('user');
-            if (user) {
-                const parsedUser = JSON.parse(user);
-                const userId = parsedUser.userId;
-                setUserId(userId);
+            const response = await axios.get(`http://localhost:3001/userProfile?emailId=${userEmail}`, {
+                withCredentials: true,
+            });
+            const profile = response?.data?.data;
+            console.log(profile);
+            setUserId(profile._id);
+            if (profile && profile.address) {
+                setDeliveryAddress(profile.address);
             } else {
-                console.log("User not found in localStorage.");
+                setDeliveryAddress(null);  // Address is not available, so show the button
             }
         } catch (error) {
-            console.error("Error retrieving user from localStorage:", error);
+            console.error("Error fetching user profile:", error);
+            setDeliveryAddress(null);  // Handle errors by showing the button
+        } finally {
+            setLoading(false);
         }
     };
-
-    const deliveryAddress = {
-        name: "John Doe",
-        street: "123 Main St",
-        city: "Springfield",
-        state: "IL",
-        zip: "62701",
-        phone: "(555) 123-4567",
-    };
-
     const placeOrder = async () => {
         try {
             const transformedItems = cartItemLists.map(item => ({
@@ -58,7 +60,7 @@ const OrderBilling = () => {
                     userId: userId,
                     items: transformedItems,
                     totalAmount: totalAmount,
-                    deliveryAddress: deliveryAddress.street,
+                    deliveryAddress: deliveryAddress,
                     orderStatus: "pending",
                     platform: "app",
                 },
@@ -69,8 +71,6 @@ const OrderBilling = () => {
 
             console.log("Order placed successfully:", response.data);
             toast.success("Order placed successfully");
-
-            // Clear cart for the kitchen and mark order as placed
             dispatch(clearCart(id)); // Redux action to clear cart for the kitchen
             setOrderPlaced(true); // Show thank-you note
         } catch (error) {
@@ -78,6 +78,26 @@ const OrderBilling = () => {
             toast.error("Failed to place the order. Please try again.");
         }
     };
+
+    const handleSaveOrEditAdd = async () => {
+        setIsAddressEditable(!isAddressEditable);
+        const userEmail = JSON.parse(localStorage.getItem("user"));
+        try {
+            const response = await axios.put(
+                `http://localhost:3001/updateProfile?userId=${userEmail.userId}`,
+                { address: deliveryAddress },
+                {
+                    withCredentials: true,
+                }
+            );
+            if (response?.data?.message) {
+                console.log("Profile updated successfully");
+                // You can add success message display here or redirect
+            }
+        } catch (err) {
+            console.log("Error updating profile:", err.message);
+        }
+    }
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
@@ -95,27 +115,39 @@ const OrderBilling = () => {
                 <React.Fragment>
                     <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-1/2">
                         <h2 className="text-xl text-custom-green font-semibold mb-4">Delivery Address</h2>
-                        <p>{deliveryAddress.name}</p>
-                        <p>{deliveryAddress.street}</p>
-                        <p>{`${deliveryAddress.city}, ${deliveryAddress.state} ${deliveryAddress.zip}`}</p>
-                        <p>{deliveryAddress.phone}</p>
+                        <div>
+                            <div className="mt-4">
+                                {(isAddressEditable) ? <input
+                                    readOnly={!isAddressEditable}
+                                    type="text"
+                                    value={deliveryAddress}
+                                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                                    placeholder="Enter your address"
+                                    className="w-full px-4 py-2 border border-gray-300 text-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-50"
+                                /> : (<p className='text-black'>{deliveryAddress}</p>)}
+                            </div>
+                            <button
+                                onClick={() => handleSaveOrEditAdd()}
+                                className="bg-custom-green text-white py-2 px-4 rounded-lg mt-2"
+                            >
+                                {isAddressEditable ? "Save Address" : deliveryAddress ? "Edit Address" : "Add Address"}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="bg-white shadow-md rounded-lg p-6 mb-6 w-1/2">
-                        <h2 className="text-xl text-custom-green font-semibold mb-4">Your Cart</h2>
+                        <h2 className="text-xl text-custom-green font-semibold mb-4">Order Summary</h2>
                         {cartItemLists && cartItemLists.length ? <ul className="divide-y p-2 divide-gray-200">
                             {cartItemLists.map((item, key) => (
                                 <li key={key} className="flex shadow-md justify-between items-center p-4">
                                     <img
-                                        src={
-                                            "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_100/RX_THUMBNAIL/IMAGES/VENDOR/2024/9/17/ca7cc541-4ba2-48c2-8de6-f09ed033b945_62876.jpg"
-                                        }
+                                        src={item.image || "https://lh3.googleusercontent.com/proxy/HtfKFkdagZAMcDYISnQFW_KRwGig586P-ZcBqED8Mo38kf8ONen9NOQMp2is03ezbqq6J8LF6Fm4S8CUi3tQlJDirH0bzUuxkMDVvA1FFrfwKjBma1PC"}
                                         alt={item.name}
                                         className="w-16 h-16 object-cover rounded-lg"
                                     />
                                     <div className="flex-grow ml-4">
                                         <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                                        <p className="text-gray-600">Price: ${item.price.toFixed(2) * item.quantity}</p>
+                                        <p className="text-gray-600">Price: ${item.price?.toFixed(2) * item.quantity}</p>
                                         <p className="text-gray-600">Quantity: {item.quantity}</p>
                                     </div>
                                 </li>
@@ -129,12 +161,12 @@ const OrderBilling = () => {
 
                     <div className="bg-white shadow-md rounded-lg p-6 w-1/2">
                         <h2 className="text-xl text-custom-green font-semibold mb-4">Total Price</h2>
-                        <p className="text-lg font-bold">${totalAmount}</p>
+                        <p className="text-lg font-bold text-black">${totalAmount}</p>
                     </div>
                     <button
                         onClick={placeOrder}
                         className={`w-1/2 mt-4 ${cartItemLists.length ? 'bg-custom-green' : 'bg-slate-400'} text-white py-2 rounded-lg`}
-                        disabled={cartItemLists.length ? false : true}
+                        disabled={!deliveryAddress || cartItemLists.length === 0}
                     >
                         Place Order
                     </button>
@@ -143,6 +175,12 @@ const OrderBilling = () => {
                 <div className="bg-white shadow-md rounded-lg p-6 text-center">
                     <h2 className="text-2xl text-custom-green font-bold mb-4">Thank You!</h2>
                     <p className="text-lg">Your order has been placed successfully.</p>
+                    <button
+                        onClick={() => navigate('/customer/kitchens')}
+                        className="bg-custom-green text-white py-2 px-4 rounded-lg mt-2"
+                    >
+                        Go to Home Page
+                    </button>
                 </div>
             )}
         </div>

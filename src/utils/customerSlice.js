@@ -29,7 +29,6 @@ const customerSlice = createSlice({
         addItemToCart: (state, action) => {
            
             const { kitchenId, item, kitchenName } = action.payload; // action.payload should include kitchenId and item
-            console.log('kitchen name',kitchenName);
             if (!state.cartItems[kitchenId]) {
                 state.cartItems[kitchenId] = []; // Initialize as an array
             }
