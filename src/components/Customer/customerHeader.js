@@ -16,6 +16,7 @@ export default function CustomerHeader({ cartCount, isKitchenDetailsPage, openCa
             "token" + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
         navigate("/");
         dispatch(removeUser());
+        dispatch({ type: "LOGOUT" });
     };
 
     return (
