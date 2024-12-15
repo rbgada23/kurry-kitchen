@@ -12,6 +12,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
   const cartItem = cartItems?.[kitchenId]?.find((item) => item.id === _id);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -51,6 +52,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
         <div className="p-4">
           <div className="text-lg flex items-center justify-between mb-2">
             <h2 className="font-semibold text-gray-800">{name}</h2>
+            {user?.userType !== "kitchen" && <span class="text-sm font-medium bg-green-100 text-green-800 px-2 py-1 rounded-lg">{type}</span>}
             {!isFromCustomerPage && (
               <div className="flex">
                 <FaEdit className="text-2xl text-custom-green cursor-pointer hover:text-gray-700" onClick={openModal} />

@@ -44,16 +44,17 @@ const KitchenMenu = () => {
                 <KitchenLayout>
                     <div className="flex flex-col p-6">
                         <div className="flex justify-between items-center py-4">
-                            <h1 className="text-2xl font-bold text-custom-green">Menu</h1>
+                            <h1 className="text-2xl font-bold text-custom-green">Menu Listings</h1>
                             {shimmerLoader ? (
-                                <React.Fragment><ShimmerButton size="sm" mode="light" /></React.Fragment>) : (
-                                <button
-                                    onClick={openModal}
-                                    className="flex items-center text-white bg-custom-green px-4 py-2 rounded-lg hover:bg-green-600"
-                                >
-                                    <FaRegSquarePlus className="mr-2" />
-                                    Add Menu
-                                </button>)}
+                                <React.Fragment><ShimmerButton size="sm" mode="light" /></React.Fragment>) : kitchenMenuList?.length !== 0 ? (
+
+                                    <button
+                                        onClick={openModal}
+                                        className="flex items-center text-white bg-custom-green px-4 py-2 rounded-lg hover:bg-green-600"
+                                    >
+                                        <FaRegSquarePlus className="mr-2" />
+                                        Add Menu
+                                    </button>) : <React.Fragment></React.Fragment>}
                         </div>
 
                         {/* Display "No menu available" when kitchenMenuList is empty */}
@@ -77,7 +78,7 @@ const KitchenMenu = () => {
                                 </div>
                             </div>
                         ) : (
-                            <div className="flex flex-wrap gap-6 w-full overflow-y-auto">
+                            <div className="flex flex-wrap gap-6 w-full p-1 overflow-y-auto">
                                 {shimmerLoader ? (
                                     <React.Fragment>{Array.from({ length: kitchenMenuList?.length || 3 }).map((_, index) => (
                                         <ShimmerDiv
