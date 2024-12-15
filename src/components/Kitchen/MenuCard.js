@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaEdit } from "react-icons/fa";
 import { addItemToCart, removeItemFromCart } from "../../utils/customerSlice";
 import MenuForm from "./MenuForm";
 import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
+import { removeKitchenMenu } from "../../utils/kitchenSlice";
+import axios from "axios";
+
 
 const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId, kitchenName, image }) => {
   const dispatch = useDispatch();
@@ -19,6 +22,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
   };
 
   const openDeleteModal = () => {
+    console.log(_id);
     setDeleteModalOpen(true);
   }
 
@@ -26,9 +30,23 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
     setDeleteModalOpen(false);
   }
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     setDeleteModalOpen(false);
-    toast.success("Menu deleted successfully");
+    try {
+      const response = await axios.put(
+        "http://localhost:3001/kitchen/kitchenMenu?id="+_id+"&isUpdate=2", // 2 is for delete
+        null,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response) {
+        dispatch(removeKitchenMenu({ _id: _id }));
+        toast.success("Menu deleted successfully")
+      }
+    } catch (error) {
+      console.error("API call failed:", error);
+    }
   }
 
   const closeModal = () => {

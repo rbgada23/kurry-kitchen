@@ -19,7 +19,9 @@ const KitchenMenu = () => {
     useEffect(() => {
         setTimeout(() => {
             setShimmerLoader(false);
+            console.log(kitchenMenuList);
         }, 500);
+        
     }, []);
 
     const openModal = () => {
@@ -101,6 +103,7 @@ const KitchenMenu = () => {
                                                 type={menu.type}
                                                 price={menu.price}
                                                 image={menu.image}
+                                                _id = {menu._id}
                                             />
                                         ))}
                                     </React.Fragment>

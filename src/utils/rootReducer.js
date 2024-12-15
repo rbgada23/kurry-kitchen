@@ -2,7 +2,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import formSlice from "./formSlice";
 import kitchenSlice from "./kitchenSlice";
-import customerSlice from "./CustomerSlice";
+import customerSlice from "./customerSlice";
 
 const appReducer = combineReducers({
     user: userReducer,

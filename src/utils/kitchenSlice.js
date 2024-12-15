@@ -21,11 +21,17 @@ const kitchenSlice = createSlice({
           state.kitchenMenuList.push(x)
       })
 
-    }
+    },
+     // New Reducer to remove an item
+     removeKitchenMenu: (state, action) => {
+      state.kitchenMenuList = state.kitchenMenuList.filter(
+        (item) => item._id !== action.payload._id
+      );
+    },
   },
 });
 
-export const { addKitchenList, addKitchen, addKitchenMenu } =
+export const { addKitchenList, addKitchen, addKitchenMenu,removeKitchenMenu } =
   kitchenSlice.actions;
 
 export default kitchenSlice.reducer;
