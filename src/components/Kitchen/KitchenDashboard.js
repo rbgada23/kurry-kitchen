@@ -89,23 +89,29 @@ useEffect(() => {
   };
 
   const getMenuItemStats = (orders) => {
-    console.log("Raw Orders:", orders); // Debug: Inspect data structure
+    console.log("Raw Orders:", orders); // Debugging
   
     const menuItemCount = orders.reduce((acc, order) => {
+      // Check if "order.items" is an array or a string
       if (Array.isArray(order.items) && order.items.length > 0) {
         order.items.forEach((item) => {
-          const itemName = item.menuItemObj?.name || "Unknown Item"; // Fallback for missing name
-          acc[itemName] = (acc[itemName] || 0) + (item.quantity || 0); // Fallback for missing quantity
+          // Use menuItemObj.name if available, else fallback to "Unknown Item"
+          const itemName = item.menuItemObj?.name || "Unknown Item";
+          acc[itemName] = (acc[itemName] || 0) + (item.quantity || 0);
         });
+      } else if (typeof order.items === "string") {
+        // Handle the case where "order.items" is a string (fallback)
+        acc[order.items] = (acc[order.items] || 0) + 1; // Increment by 1 for string-based items
       }
       return acc;
     }, {});
   
     return {
-      labels: Object.keys(menuItemCount), // Menu item names
-      values: Object.values(menuItemCount), // Quantities sold
+      labels: Object.keys(menuItemCount), // Menu item names (x-axis for the graph)
+      values: Object.values(menuItemCount), // Quantities sold (y-axis for the graph)
     };
   };
+  
   
 
   const processInsights = (orders) => {
