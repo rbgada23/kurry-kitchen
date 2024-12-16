@@ -34,7 +34,7 @@ export default function CustomerOrder() {
                         ? order.items.reduce((sum, item) => sum + item.quantity, 0)
                         : 1,
                     price: parseFloat(order.totalAmount.$numberDecimal || "0"),
-                    kitchenName: "Kitchen Placeholder", // Replace with actual kitchen name if available
+                    kitchenName: order?.kitchenName, // Replace with actual kitchen name if available
                 }));
 
                 // Dynamically set shimmer rows based on fetched data length
