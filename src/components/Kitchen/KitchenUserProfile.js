@@ -15,11 +15,11 @@ export default function KitchenUserProfile() {
         address: "",
         zipcode: "",
         contactNumber: "",
-        logo: "https://via.placeholder.com/150", // Default placeholder image
+        logo: "",
     });
 
     useEffect(() => {
-        if (kitchen?._id) {  // Only fetch profile if kitchen is available
+        if (kitchen?._id) {
             getUserProfile();
         }
     }, [kitchen]);
@@ -156,7 +156,7 @@ export default function KitchenUserProfile() {
                                 </label>
                                 <input
                                     type="text"
-                                    name="firstName"
+                                    name="name"
                                     value={profile.name}
                                     onChange={handleInputChange}
                                     placeholder="Enter your first name"

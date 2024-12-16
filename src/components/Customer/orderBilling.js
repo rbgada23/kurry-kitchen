@@ -4,7 +4,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { clearCart } from '../../utils/customerSlice';
+import { clearCart } from '../../utils/CustomerSlice';
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 
 const OrderBilling = () => {

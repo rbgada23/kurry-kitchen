@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaEdit } from "react-icons/fa";
-import { addItemToCart, removeItemFromCart } from "../../utils/customerSlice";
+import { addItemToCart, removeItemFromCart } from "../../utils/CustomerSlice";
 import MenuForm from "./MenuForm";
 import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';

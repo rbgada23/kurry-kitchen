@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTrash, FaTimes } from 'react-icons/fa';
-import { removeItemFromCart } from '../../utils/customerSlice';
+import { removeItemFromCart } from '../../utils/CustomerSlice';
 import { useNavigate, useParams } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 
