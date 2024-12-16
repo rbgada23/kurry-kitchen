@@ -56,14 +56,20 @@ const KitchenDashboard = () => {
         }),
         timeout,
       ]);
-
-      setOrders(response.data.data);
-      console.log(response);
-      processInsights(response.data.data);
+  
+      // Filter orders with status "accepted"
+      const acceptedOrders = response.data.data.filter(
+        (order) => order.orderStatus === "accepted"
+      );
+  
+      setOrders(acceptedOrders); // Set only accepted orders
+      console.log("Accepted Orders:", acceptedOrders);
+      processInsights(acceptedOrders); // Pass accepted orders to insights
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
   };
+  
 
   const getMenuItemStats = (orders) => {
     console.log("Orders for MenuItemStats:", orders);
@@ -206,6 +212,10 @@ const KitchenDashboard = () => {
 
   const processInsights = (orders) => {
     console.log("Processing Insights for Orders:", orders);
+
+    const acceptedOrders = orders.filter((order) => order.orderStatus === "accepted");
+
+    console.log("Accepted Orders:", acceptedOrders);
 
     setOrdersByDay(getOrdersByDay(orders));
     setOrdersByTime(getOrdersByTime(orders));
