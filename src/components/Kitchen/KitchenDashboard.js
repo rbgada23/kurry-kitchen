@@ -30,10 +30,15 @@ ChartJS.register(
 
 
 const KitchenDashboard = () => {
-  const [orders, setOrders] = useState([]); // Raw orders data
-  const [ordersByDay, setOrdersByDay] = useState(null); // Orders grouped by day
-  const [ordersByTime, setOrdersByTime] = useState(null); // Orders grouped by time
-  const [menuItemStats, setMenuItemStats] = useState(null); // Stats by menu items
+  const [orders, setOrders] = useState([]); 
+  const [ordersByDay, setOrdersByDay] = useState(null); 
+  const [ordersByTime, setOrdersByTime] = useState(null); 
+  const [menuItemStats, setMenuItemStats] = useState(null);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [averageOrderValue, setAverageOrderValue] = useState(0);
+
+
 
   const kitchen = useSelector((store) => store.kitchen.kitchenObj);
 
@@ -64,30 +69,46 @@ useEffect(() => {
 
   const getOrdersByDay = (orders) => {
     const groupedByDay = orders.reduce((acc, order) => {
-      const day = new Date(order.createdAt).toLocaleString("en-US", { weekday: "short" });
-      acc[day] = (acc[day] || 0) + 1; // Increment count for the day
+      const date = new Date(order.orderDate);
+  
+      if (!isNaN(date)) { // Check if date is valid
+        const day = date.toLocaleString("en-US", { weekday: "short" }); // e.g., Mon, Tue
+        acc[day] = (acc[day] || 0) + 1;
+      } else {
+        console.warn("Invalid date encountered:", order.createdAt);
+      }
+  
       return acc;
     }, {});
-
+  
     return {
       labels: Object.keys(groupedByDay), // ["Mon", "Tue", "Wed", ...]
       values: Object.values(groupedByDay), // [10, 15, 20, ...]
     };
   };
+  
+
 
   const getOrdersByTime = (orders) => {
     const groupedByTime = orders.reduce((acc, order) => {
-      const hour = new Date(order.createdAt).getHours(); // Extract hour (0-23)
-      acc[hour] = (acc[hour] || 0) + 1;
+      const date = new Date(order.orderDate); // Use orderDate directly
+  
+      if (!isNaN(date)) { // Check if date is valid
+        const hour = date.getHours(); // Extract hour (0-23)
+        acc[hour] = (acc[hour] || 0) + 1;
+      } else {
+        console.warn("Invalid date encountered:", order.createdAt);
+      }
+  
       return acc;
     }, {});
-
+  
     return {
-      labels: Object.keys(groupedByTime).map((hour) => `${hour}:00`), // ["0:00", "1:00", ...]
-      values: Object.values(groupedByTime), // [5, 10, 15, ...]
+      labels: Object.keys(groupedByTime).map((hour) => `${hour}:00`), // Format as "0:00", "1:00"
+      values: Object.values(groupedByTime), // Count of orders
     };
   };
-
+  
   const getMenuItemStats = (orders) => {
     console.log("Raw Orders:", orders); // Debugging
   
@@ -101,7 +122,7 @@ useEffect(() => {
         });
       } else if (typeof order.items === "string") {
         // Handle the case where "order.items" is a string (fallback)
-        acc[order.items] = (acc[order.items] || 0) + 1; // Increment by 1 for string-based items
+        acc[order.items] = (acc[order.items] || 0) + 1; 
       }
       return acc;
     }, {});
@@ -112,12 +133,29 @@ useEffect(() => {
     };
   };
   
+const getTotalRevenue = (orders) => {
+  return orders.reduce((acc, order) => {
+    const amount = parseFloat(order.totalAmount?.$numberDecimal || 0);
+    return acc + amount;
+  }, 0).toFixed(2);
+};
+
+
+  const getAverageOrderValue = (orders) => {
+    const totalRevenue = getTotalRevenue(orders);
+    const totalOrders = setTotalOrders(orders);
+    return totalOrders > 0 ? (totalRevenue / totalOrders).toFixed(2) : "0.00";
+  };
+  
   
 
   const processInsights = (orders) => {
     setOrdersByDay(getOrdersByDay(orders));
     setOrdersByTime(getOrdersByTime(orders));
     setMenuItemStats(getMenuItemStats(orders));
+    setTotalOrders(orders.length);
+    setTotalRevenue(getTotalRevenue(orders));
+    setAverageOrderValue(getAverageOrderValue(orders));
   };
 
   const ordersByDayData = {
@@ -158,6 +196,8 @@ useEffect(() => {
   return (
     <KitchenLayout>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-5">
+
+      
       {/* Orders by Day */}
       <div className="bg-white p-4 rounded shadow">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">Orders by Day</h2>
@@ -176,7 +216,35 @@ useEffect(() => {
         <Doughnut data={menuItemStatsData} />
       </div>
     </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-5">
+  {/* Total Orders Card */}
+  <div className="bg-white p-6 rounded shadow flex flex-col items-center">
+    <h2 className="text-lg font-semibold text-gray-600">Total Orders</h2>
+    <p className="text-4xl font-bold text-indigo-600 mt-2">
+      {typeof totalOrders === "number" ? totalOrders : 0}
+    </p>
+  </div>
+
+  {/* Total Revenue Card */}
+  <div className="bg-white p-6 rounded shadow flex flex-col items-center">
+    <h2 className="text-lg font-semibold text-gray-600">Total Revenue</h2>
+    <p className="text-4xl font-bold text-green-600 mt-2">
+      ${typeof totalRevenue === "string" ? totalRevenue : "0.00"}
+    </p>
+  </div>
+
+  {/* Average Order Value (AOV) Card */}
+  <div className="bg-white p-6 rounded shadow flex flex-col items-center">
+    <h2 className="text-lg font-semibold text-gray-600">Avg Order Value</h2>
+    <p className="text-4xl font-bold text-blue-600 mt-2">
+      ${typeof averageOrderValue === "string" ? averageOrderValue : "0.00"}
+    </p>
+  </div>
+</div>
+
     </KitchenLayout>
+
+
   );
 };
 
