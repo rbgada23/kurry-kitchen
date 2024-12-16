@@ -67,87 +67,80 @@ useEffect(() => {
   };
 
 
+  const getMenuItemStats = (orders) => {
+    const menuItemCount = orders.reduce((acc, order) => {
+      if (Array.isArray(order.items)) {
+        // Handle items as an array
+        order.items.forEach((item) => {
+          const itemName = item.menuItemObj?.name || "Unknown Item";
+          acc[itemName] = (acc[itemName] || 0) + (item.quantity || 1);
+        });
+      } else if (typeof order.items === "string") {
+        // Handle items as a string, e.g., "5 Lunch Meal"
+        const [quantityStr, ...menuParts] = order.items.split(" ");
+        const quantity = parseInt(quantityStr, 10) || 1; // Extract quantity
+        const itemName = menuParts.join(" ") || "Unknown Item"; // Extract menu name
+        acc[itemName] = (acc[itemName] || 0) + quantity;
+      }
+      return acc;
+    }, {});
+
+    return {
+      labels: Object.keys(menuItemCount),
+      values: Object.values(menuItemCount),
+    };
+  };
+
   const getOrdersByDay = (orders) => {
     const groupedByDay = orders.reduce((acc, order) => {
       const date = new Date(order.orderDate);
-  
-      if (!isNaN(date)) { // Check if date is valid
-        const day = date.toLocaleString("en-US", { weekday: "short" }); // e.g., Mon, Tue
+      if (!isNaN(date)) {
+        const day = date.toLocaleString("en-US", { weekday: "short" });
         acc[day] = (acc[day] || 0) + 1;
       } else {
-        console.warn("Invalid date encountered:", order.createdAt);
+        console.warn("Invalid orderDate encountered:", order.orderDate);
       }
-  
       return acc;
     }, {});
-  
+
     return {
-      labels: Object.keys(groupedByDay), // ["Mon", "Tue", "Wed", ...]
-      values: Object.values(groupedByDay), // [10, 15, 20, ...]
+      labels: Object.keys(groupedByDay),
+      values: Object.values(groupedByDay),
     };
   };
-  
-
 
   const getOrdersByTime = (orders) => {
     const groupedByTime = orders.reduce((acc, order) => {
-      const date = new Date(order.orderDate); // Use orderDate directly
-  
-      if (!isNaN(date)) { // Check if date is valid
-        const hour = date.getHours(); // Extract hour (0-23)
+      const date = new Date(order.orderDate);
+      if (!isNaN(date)) {
+        const hour = date.getHours();
         acc[hour] = (acc[hour] || 0) + 1;
       } else {
-        console.warn("Invalid date encountered:", order.createdAt);
-      }
-  
-      return acc;
-    }, {});
-  
-    return {
-      labels: Object.keys(groupedByTime).map((hour) => `${hour}:00`), // Format as "0:00", "1:00"
-      values: Object.values(groupedByTime), // Count of orders
-    };
-  };
-  
-  const getMenuItemStats = (orders) => {
-    console.log("Raw Orders:", orders); // Debugging
-  
-    const menuItemCount = orders.reduce((acc, order) => {
-      // Check if "order.items" is an array or a string
-      if (Array.isArray(order.items) && order.items.length > 0) {
-        order.items.forEach((item) => {
-          // Use menuItemObj.name if available, else fallback to "Unknown Item"
-          const itemName = item.menuItemObj?.name || "Unknown Item";
-          acc[itemName] = (acc[itemName] || 0) + (item.quantity || 0);
-        });
-      } else if (typeof order.items === "string") {
-        // Handle the case where "order.items" is a string (fallback)
-        acc[order.items] = (acc[order.items] || 0) + 1; 
+        console.warn("Invalid orderDate encountered:", order.orderDate);
       }
       return acc;
     }, {});
-  
-    return {
-      labels: Object.keys(menuItemCount), // Menu item names (x-axis for the graph)
-      values: Object.values(menuItemCount), // Quantities sold (y-axis for the graph)
-    };
-  };
-  
-const getTotalRevenue = (orders) => {
-  return orders.reduce((acc, order) => {
-    const amount = parseFloat(order.totalAmount?.$numberDecimal || 0);
-    return acc + amount;
-  }, 0).toFixed(2);
-};
 
+    return {
+      labels: Object.keys(groupedByTime).map((hour) => `${hour}:00`),
+      values: Object.values(groupedByTime),
+    };
+  };
+
+  const getTotalRevenue = (orders) => {
+    return orders
+      .reduce((acc, order) => {
+        const amount = parseFloat(order.totalAmount?.$numberDecimal || 0);
+        return acc + amount;
+      }, 0)
+      .toFixed(2);
+  };
 
   const getAverageOrderValue = (orders) => {
-    const totalRevenue = getTotalRevenue(orders);
-    const totalOrders = setTotalOrders(orders);
+    const totalRevenue = parseFloat(getTotalRevenue(orders));
+    const totalOrders = orders.length;
     return totalOrders > 0 ? (totalRevenue / totalOrders).toFixed(2) : "0.00";
   };
-  
-  
 
   const processInsights = (orders) => {
     setOrdersByDay(getOrdersByDay(orders));
@@ -192,61 +185,50 @@ const getTotalRevenue = (orders) => {
     ],
   };
 
-
   return (
     <KitchenLayout>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-5">
+        {/* Orders by Day */}
+        <div className="bg-white p-4 rounded shadow">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Orders by Day</h2>
+          <Line data={ordersByDayData} />
+        </div>
 
-      
-      {/* Orders by Day */}
-      <div className="bg-white p-4 rounded shadow">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Orders by Day</h2>
-        <Line data={ordersByDayData} />
+        {/* Orders by Time */}
+        <div className="bg-white p-4 rounded shadow">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Orders by Time of Day</h2>
+          <Line data={ordersByTimeData} />
+        </div>
+
+        {/* Menu Item Stats */}
+        <div className="bg-white p-4 rounded shadow">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Menu Item Stats</h2>
+          <Doughnut data={menuItemStatsData} />
+        </div>
       </div>
 
-      {/* Orders by Time */}
-      <div className="bg-white p-4 rounded shadow">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Orders by Time of Day</h2>
-        <Line data={ordersByTimeData} />
+      {/* Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-5">
+        {/* Total Orders */}
+        <div className="bg-white p-6 rounded shadow flex flex-col items-center">
+          <h2 className="text-lg font-semibold text-gray-600">Total Orders</h2>
+          <p className="text-4xl font-bold text-indigo-600 mt-2">{totalOrders}</p>
+        </div>
+
+        {/* Total Revenue */}
+        <div className="bg-white p-6 rounded shadow flex flex-col items-center">
+          <h2 className="text-lg font-semibold text-gray-600">Total Revenue</h2>
+          <p className="text-4xl font-bold text-green-600 mt-2">${totalRevenue}</p>
+        </div>
+
+        {/* Average Order Value */}
+        <div className="bg-white p-6 rounded shadow flex flex-col items-center">
+          <h2 className="text-lg font-semibold text-gray-600">Avg Order Value</h2>
+          <p className="text-4xl font-bold text-blue-600 mt-2">${averageOrderValue}</p>
+        </div>
       </div>
-
-      {/* Menu Item Stats */}
-      <div className="bg-white p-4 rounded shadow">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Menu Item Stats</h2>
-        <Doughnut data={menuItemStatsData} />
-      </div>
-    </div>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-5">
-  {/* Total Orders Card */}
-  <div className="bg-white p-6 rounded shadow flex flex-col items-center">
-    <h2 className="text-lg font-semibold text-gray-600">Total Orders</h2>
-    <p className="text-4xl font-bold text-indigo-600 mt-2">
-      {typeof totalOrders === "number" ? totalOrders : 0}
-    </p>
-  </div>
-
-  {/* Total Revenue Card */}
-  <div className="bg-white p-6 rounded shadow flex flex-col items-center">
-    <h2 className="text-lg font-semibold text-gray-600">Total Revenue</h2>
-    <p className="text-4xl font-bold text-green-600 mt-2">
-      ${typeof totalRevenue === "string" ? totalRevenue : "0.00"}
-    </p>
-  </div>
-
-  {/* Average Order Value (AOV) Card */}
-  <div className="bg-white p-6 rounded shadow flex flex-col items-center">
-    <h2 className="text-lg font-semibold text-gray-600">Avg Order Value</h2>
-    <p className="text-4xl font-bold text-blue-600 mt-2">
-      ${typeof averageOrderValue === "string" ? averageOrderValue : "0.00"}
-    </p>
-  </div>
-</div>
-
     </KitchenLayout>
-
-
   );
 };
-
 
 export default KitchenDashboard;
