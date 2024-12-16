@@ -52,11 +52,16 @@ const KitchenOrdersPage = () => {
   };
 
   const handleOrderStatus = async (order, type) => {
+    console.log(order);
+    const orderObj = {
+      userContactNumber : order.userObj.contactNumber,
+      userName : order.userObj.firstName
+    }
     order.orderStatus = type;
     try {
       const response = await axios.put(
         "http://localhost:3001/order/orderStatus?id=" + order._id+"&orderStatus="+order.orderStatus,
-        null,
+        orderObj,
         {
           withCredentials: true,
         }
@@ -174,7 +179,7 @@ const KitchenOrdersPage = () => {
                               </div>
                             ))
                           ) : (
-                            <div>{order.items}</div>
+                            <div>{order.items.replace(/^\d+\s*/, "")}</div>
                           )}
                         </td>
                         <td className="p-4 whitespace-nowrap">
@@ -183,7 +188,7 @@ const KitchenOrdersPage = () => {
                               <div key={index}>{item?.quantity || "N/A"}</div>
                             ))
                           ) : (
-                            <div>N/A</div>
+                            <div>{order.items.match(/^\d+/)?.[0]}</div>
                           )}
                         </td>
                         <td className="p-4 whitespace-nowrap">
