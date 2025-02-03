@@ -1,6 +1,6 @@
 import React from "react";
 import { toogleFormSelection } from "../utils/formSlice";
-import { CUSTOMER, SELLER } from "../utils/constants";
+import { API_BASE_URL, CUSTOMER, SELLER } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { removeUser } from "../utils/userSlice";
@@ -28,8 +28,9 @@ const Header = () => {
     <div className="absolute mt-9 w-full px-8 py-4 z-10 flex flex-row items-center justify-between">
       <div className="flex-grow" />
       <div className="font-serif text-3xl text-custom-green font-bold absolute left-1/2 transform -translate-x-1/2">
-        K u r r y &nbsp; K i t c h e n
+        K u r r y &nbsp; K i t c h e n dev
       </div>
+      {API_BASE_URL} dev
       {/* {true && (
         <div className="flex items-center p-2 justify-end">
           {!user && (
