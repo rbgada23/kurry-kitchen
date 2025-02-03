@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import CartSidebar from "./CartSidebar";
 import CustomerHeader from "./CustomerHeader";
 import CustomerLayout from "./CustomerLayout";
+import { API_BASE_URL } from "../../utils/constants";
 
 const KitchenDetails = () => {
   const { state } = useLocation();
@@ -22,7 +23,7 @@ const KitchenDetails = () => {
     const fetchKitchenDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/kitchen/kitchenMenu?kitchen=${id}`,
+          `${API_BASE_URL}/kitchen/kitchenMenu?kitchen=${id}`,
           {
             withCredentials: true,
           }

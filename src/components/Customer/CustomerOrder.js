@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CustomerLayout from "./CustomerLayout";
 import axios from "axios";
 import { ShimmerTable } from "shimmer-effects-react";
+import { API_BASE_URL } from "../../utils/constants";
 
 export default function CustomerOrder() {
     const [orders, setOrders] = useState([]);
@@ -19,7 +20,7 @@ export default function CustomerOrder() {
         const fetchOrders = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:3001/order/user/history?userId=67461bbc6c2ac94cdcc10ffa",
+                    `${API_BASE_URL}/order/user/history?userId=67461bbc6c2ac94cdcc10ffa`,
                     {
                         withCredentials: true,
                     }

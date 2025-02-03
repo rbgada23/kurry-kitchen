@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import KitchenLayout from "./KitchenLayout";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Line, Bar, Doughnut } from "react-chartjs-2";
-import { SERVER_URL } from "../../utils/constants";
+import { API_BASE_URL } from "../../utils/constants";
 import io from "socket.io-client";
 import { ShimmerTable } from "shimmer-effects-react";
 import { useSelector } from "react-redux";
@@ -51,7 +51,7 @@ const KitchenDashboard = () => {
     try {
       const timeout = new Promise((resolve) => setTimeout(resolve, 500));
       const [response] = await Promise.all([
-        axios.get(`${SERVER_URL}/order/kitchen?kitchenId=${kitchen._id}`, {
+        axios.get(`${API_BASE_URL}/order/kitchen?kitchenId=${kitchen._id}`, {
           withCredentials: true,
         }),
         timeout,

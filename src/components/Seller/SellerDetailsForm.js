@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addKitchen } from "../../utils/kitchenSlice";
 import axios from "axios";
 import useUserProfile from "../../hooks/useUserProfile";
+import { API_BASE_URL } from "../../utils/constants";
 
 const SellerDetailsForm = ({ isKitchenFormModalOpen, closeKitchenFormModal,test }) => {
   const user = useSelector((store) => store.user);
@@ -35,7 +36,7 @@ const SellerDetailsForm = ({ isKitchenFormModalOpen, closeKitchenFormModal,test 
     };
     try {
       const response = await axios.post(
-        "http://localhost:3001/kitchen",
+        `${API_BASE_URL}/kitchen`,
         kitchenObj,
         {
           withCredentials: true,

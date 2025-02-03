@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { kitchenList } from "../stubs/kitchen-list";
 import { addKitchenList } from "../utils/kitchenSlice";
 import axios from "axios";
+import { API_BASE_URL } from "../utils/constants";
 
 const useKitchenList = () => {
 
@@ -11,7 +12,7 @@ const useKitchenList = () => {
 
   const getKitchenList = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/kitchen/all", {
+      const response = await axios.get(`${API_BASE_URL}/kitchen/all`, {
         withCredentials: true
       });
       const kitchenData = response.data.data.map((menu) => {

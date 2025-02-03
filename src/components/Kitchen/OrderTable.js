@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { useTable } from "react-table";
 import { CheckIcon, XIcon } from "@heroicons/react/solid";
 import io from "socket.io-client";
+import { API_BASE_URL } from "../../utils/constants";
 
 const OrderTable = ({ data }) => {
   // Initialize socket connection
-  const socket = io.connect("http://localhost:3001"); // Update the URL if needed
+  const socket = io.connect(`${API_BASE_URL}`); // Update the URL if needed
   const columns = React.useMemo(
     () => [
       {

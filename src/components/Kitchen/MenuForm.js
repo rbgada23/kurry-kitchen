@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addKitchenMenu } from "../../utils/kitchenSlice";
 import { toast } from "react-toastify";
 import { MdFileUpload } from "react-icons/md";
+import { API_BASE_URL } from "../../utils/constants";
 
 const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
   const [name, setName] = useState(isEdit ? menuData.name : "");
@@ -61,7 +62,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
     };
     try {
       const response = await axios.put(
-        "http://localhost:3001/kitchen/kitchenMenu",
+        `${API_BASE_URL}/kitchen/kitchenMenu`,
         menuObj,
         {
           withCredentials: true,
@@ -87,7 +88,7 @@ const MenuForm = ({ isModalOpen, closeModal, isEdit, menuData }) => {
     };
     try {
       const response = await axios.post(
-        "http://localhost:3001/kitchen/kitchenMenu",
+        `${API_BASE_URL}/kitchen/kitchenMenu`,
         menuObj,
         {
           headers: { "Content-Type": "multipart/form-data" },

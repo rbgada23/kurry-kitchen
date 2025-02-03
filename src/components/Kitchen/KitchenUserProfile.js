@@ -5,6 +5,7 @@ import KitchenLayout from "./KitchenLayout";
 import useKitchen from "../../hooks/useKitchen";
 import { ShimmerButton, ShimmerDiv, ShimmerTitle } from "shimmer-effects-react";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../../utils/constants";
 
 export default function KitchenUserProfile() {
     useKitchen();
@@ -60,7 +61,7 @@ export default function KitchenUserProfile() {
         // Fetch profile data (placeholder for now)
         try {
             const response = await axios.get(
-                `http://localhost:3001/kitchen/profile?kitchenId=${kitchen._id}`,
+                `${API_BASE_URL}/kitchen/profile?kitchenId=${kitchen._id}`,
                 {
                     withCredentials: true,
                 }
@@ -81,7 +82,7 @@ export default function KitchenUserProfile() {
             data.append("image", document.getElementById("profile-image-upload").files[0]);
 
             const response = await axios.put(
-                `http://localhost:3001/kitchen/profile?kitchenId=${kitchen._id}`,
+                `${API_BASE_URL}/kitchen/profile?kitchenId=${kitchen._id}`,
                 data,
                 {
                     withCredentials: true,

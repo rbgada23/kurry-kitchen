@@ -6,6 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { clearCart } from '../../utils/CustomerSlice';
 import { HiOutlineShoppingCart } from "react-icons/hi2";
+import { API_BASE_URL } from '../../utils/constants';
 
 const OrderBilling = () => {
     const [userId, setUserId] = useState('');
@@ -28,7 +29,7 @@ const OrderBilling = () => {
         setLoading(true);
         const userEmail = JSON.parse(localStorage.getItem('user'))?.email;
         try {
-            const response = await axios.get(`http://localhost:3001/userProfile?emailId=${userEmail}`, {
+            const response = await axios.get(`${API_BASE_URL}/userProfile?emailId=${userEmail}`, {
                 withCredentials: true,
             });
             const profile = response?.data?.data;
@@ -54,7 +55,7 @@ const OrderBilling = () => {
                 price: item.price
             }));
             const response = await axios.post(
-                "http://localhost:3001/order",
+                `${API_BASE_URL}/order`,
                 {
                     kitchenId: id,
                     userId: userId,
@@ -84,7 +85,7 @@ const OrderBilling = () => {
         const userEmail = JSON.parse(localStorage.getItem("user"));
         try {
             const response = await axios.put(
-                `http://localhost:3001/updateProfile?userId=${userEmail.userId}`,
+                `${API_BASE_URL}/updateProfile?userId=${userEmail.userId}`,
                 { address: deliveryAddress },
                 {
                     withCredentials: true,

@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import { toast } from 'react-toastify';
 import { removeKitchenMenu } from "../../utils/kitchenSlice";
 import axios from "axios";
+import { API_BASE_URL } from "../../utils/constants";
 
 
 const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId, kitchenName, image }) => {
@@ -34,7 +35,7 @@ const MenuCard = ({ name, items, type, price, _id, isFromCustomerPage, kitchenId
     setDeleteModalOpen(false);
     try {
       const response = await axios.put(
-        "http://localhost:3001/kitchen/kitchenMenu?id="+_id+"&isUpdate=2", // 2 is for delete
+        `${API_BASE_URL}/kitchen/kitchenMenu?id="+_id+"&isUpdate=2`, // 2 is for delete
         null,
         {
           withCredentials: true,

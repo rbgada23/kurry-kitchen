@@ -4,7 +4,7 @@ import { CheckIcon, XIcon } from "@heroicons/react/solid";
 import { RefreshIcon } from "@heroicons/react/outline";
 
 import KitchenLayout from "./KitchenLayout";
-import { SERVER_URL } from "../../utils/constants";
+import { API_BASE_URL } from "../../utils/constants";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
@@ -15,7 +15,7 @@ const KitchenOrdersPage = () => {
   const [ordersIncoming, setIncomingOrders] = useState([]);
   const [isOrdersFetching, setIsOrdersFetching] = useState(true);
   const kitchen = useSelector((store) => store.kitchen.kitchenObj);
-  const socket = io.connect("http://localhost:3001");
+  const socket = io.connect(`${API_BASE_URL}`);
 
   useEffect(() => {
     if (kitchen) {
@@ -38,7 +38,7 @@ const KitchenOrdersPage = () => {
       setIsOrdersFetching(true);
       const timeout = new Promise((resolve) => setTimeout(resolve, 500));
       const [response] = await Promise.all([
-        axios.get(`${SERVER_URL}/order/kitchen?kitchenId=${kitchen._id}`, {
+        axios.get(`${API_BASE_URL}/order/kitchen?kitchenId=${kitchen._id}`, {
           withCredentials: true,
         }),
         timeout,
@@ -60,7 +60,7 @@ const KitchenOrdersPage = () => {
     order.orderStatus = type;
     try {
       const response = await axios.put(
-        "http://localhost:3001/order/orderStatus?id=" + order._id+"&orderStatus="+order.orderStatus,
+       `${API_BASE_URL}/order/orderStatus?id=${order._id}&orderStatus=${order.orderStatus}`,
         orderObj,
         {
           withCredentials: true,

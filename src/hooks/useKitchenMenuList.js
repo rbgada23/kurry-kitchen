@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addKitchenMenu } from "../utils/kitchenSlice";
 import axios from "axios";
+import { API_BASE_URL } from "../utils/constants";
 
 const useKitchenMenuList = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const useKitchenMenuList = () => {
     if (!kitchen?._id) return;
     try {
       const response = await axios.get(
-        "http://localhost:3001/kitchen/kitchenMenu",
+        `${API_BASE_URL}/kitchen/kitchenMenu`,
         {
           withCredentials: true,
           params: {

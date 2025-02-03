@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CustomerLayout from "./CustomerLayout";
 import axios from "axios";
 import { ShimmerButton, ShimmerTitle } from "shimmer-effects-react";
+import { API_BASE_URL } from "../../utils/constants";
 
 export default function CustomerProfile() {
   const [profile, setProfile] = useState({
@@ -36,7 +37,7 @@ export default function CustomerProfile() {
     const userEmail = JSON.parse(localStorage.getItem("user"));
     try {
       const response = await axios.get(
-        `http://localhost:3001/userProfile?emailId=${userEmail.email}`,
+        `${API_BASE_URL}/userProfile?emailId=${userEmail.email}`,
         {
           withCredentials: true,
         }
@@ -52,7 +53,7 @@ export default function CustomerProfile() {
     const userEmail = JSON.parse(localStorage.getItem("user"));
     try {
       const response = await axios.put(
-        `http://localhost:3001/updateProfile?userId=${userEmail.userId}`,
+        `${API_BASE_URL}/updateProfile?userId=${userEmail.userId}`,
         profile,
         {
           withCredentials: true,

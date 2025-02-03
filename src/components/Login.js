@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import Header from "./Header";
 import { useSelector } from "react-redux";
-import { SELLER } from "../utils/constants";
+import { API_BASE_URL, SELLER } from "../utils/constants";
 
 import { checkValidData } from "../utils/validate";
 import { useDispatch } from "react-redux";
@@ -36,7 +36,7 @@ const Login = () => {
       };
       try {
         const response = await axios.post(
-          "http://localhost:3001/signup",
+          `${API_BASE_URL}/signup`,
           userObj
         );
 
@@ -65,7 +65,7 @@ const Login = () => {
         password: password.current.value,
       };
       try {
-        const response = await axios.post('http://localhost:3001/login', userObj, {
+        const response = await axios.post(`${API_BASE_URL}/login`, userObj, {
           withCredentials: true,
         });
         if (response) {

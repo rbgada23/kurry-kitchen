@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { SELLER } from "../utils/constants";
+import { API_BASE_URL, SELLER } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 
 const useUserProfile = () => {
@@ -12,7 +12,7 @@ const useUserProfile = () => {
  
   const getUserProfile = async (emailId) => {
     try {
-      const userProfile = await axios.get("http://localhost:3001/userProfile", {
+      const userProfile = await axios.get(`${API_BASE_URL}/userProfile`, {
         withCredentials: true,
         params: {
           emailId: emailId,
